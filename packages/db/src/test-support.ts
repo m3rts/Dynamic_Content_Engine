@@ -52,6 +52,7 @@ export async function prepareFoundationDatabase(adminUrl: string): Promise<void>
   await bootstrapDatabase(adminUrl);
   await applyMigrations(migratorDatabaseUrl(adminUrl), {
     through: "0009_mark_dispatch_delivered.sql",
+    exclude: ["0008_boss_queue_grants.sql"],
   });
 }
 

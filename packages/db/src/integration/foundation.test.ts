@@ -76,6 +76,8 @@ describe("database integration", { skip: adminUrl ? false : "TEST_DATABASE_URL n
       );
       assert.ok(migrations.rowCount >= 6);
       assert.ok(migrations.rows.some((row) => row.id === "0007_auth_and_identity.sql"));
+      assert.ok(migrations.rows.some((row) => row.id === "0009_mark_dispatch_delivered.sql"));
+      assert.ok(!migrations.rows.some((row) => row.id === "0008_boss_queue_grants.sql"));
     });
 
     await withClient(adminUrl!, async (client) => {

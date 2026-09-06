@@ -3,10 +3,11 @@ import { PgBoss } from "pg-boss";
 import { roleDatabaseUrl } from "./index.js";
 import { prepareQueueDatabase, withClient } from "./test-support.js";
 
-const adminUrl = process.env.TEST_DATABASE_URL;
+const adminUrl =
+  process.env.ADMIN_DATABASE_URL ?? process.env.TEST_DATABASE_URL;
 
 if (!adminUrl) {
-  console.error("TEST_DATABASE_URL is required");
+  console.error("ADMIN_DATABASE_URL or TEST_DATABASE_URL is required");
   process.exitCode = 1;
 } else {
   await prepareQueueDatabase(adminUrl);

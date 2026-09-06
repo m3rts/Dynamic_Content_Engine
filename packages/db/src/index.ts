@@ -19,10 +19,13 @@ export async function readMigration(fileName: string): Promise<string> {
   return readFile(path.join(getSqlDir(), fileName), "utf8");
 }
 
+export const BOSS_QUEUE_GRANTS_MIGRATION = "0008_boss_queue_grants.sql";
+
 export async function applyMigrations(
   connectionString: string,
-  options: { through?: string } = {},
+  options: { through?: string; exclude?: readonly string[] } = {},
 ): Promise<string[]> {
+  const excluded = new Set(options.exclude ?? []);
   const client = new pg.Client({ connectionString });
   await client.connect();
 
@@ -45,6 +48,10 @@ export async function applyMigrations(
     for (const fileName of await listMigrationFiles()) {
       if (options.through && fileName > options.through) {
         break;
+      }
+
+      if (excluded.has(fileName)) {
+        continue;
       }
 
       if (existing.has(fileName)) {

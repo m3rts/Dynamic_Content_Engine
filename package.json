@@ -15,6 +15,7 @@
     "test:boundaries": "node --test scripts/check-boundaries.test.mjs scripts/load-root-env.test.mjs scripts/gitleaks-config.test.mjs",
     "test:integration": "pnpm --filter @dce/db run test:integration && pnpm --filter @dce/web run test:integration && pnpm --filter @dce/worker run test:integration",
     "db:migrate": "pnpm --filter @dce/db run migrate",
+    "db:setup-queue": "pnpm --filter @dce/db run setup:queue",
     "db:verify-pgboss": "pnpm --filter @dce/db run verify:pgboss",
     "owner:bootstrap": "pnpm --filter @dce/db run owner:bootstrap",
     "dev": "pnpm --filter @dce/web run dev",

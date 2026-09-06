@@ -40,7 +40,8 @@ corepack enable
 pnpm install --frozen-lockfile
 cp .env.example .env   # set BETTER_AUTH_SECRET (openssl rand -base64 32)
 docker compose -f infra/compose.yaml up -d postgres
-pnpm run db:migrate    # loads root .env automatically
+pnpm run db:migrate       # app/control/auth migrations (dce_migrator; skips boss grants)
+pnpm run db:setup-queue   # pg-boss schema + queue grants (dce_boss_migrator)
 pnpm run owner:bootstrap
 pnpm run dev           # http://127.0.0.1:3000 — loads root .env automatically
 pnpm run worker:dev    # fixture dispatcher (requires QUEUE_DATABASE_URL, DCE_FIXTURE_MODE=strict)
