@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16.8-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_USER: dce
+      POSTGRES_PASSWORD: dce_local
+      POSTGRES_DB: dce
+    volumes:
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dce -d dce"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

@@ -40,7 +40,11 @@ Requires Node.js 22.12+ and pnpm 9.15.9 (see `.nvmrc` and `packageManager` in `p
 ```bash
 corepack enable
 pnpm install --frozen-lockfile
+docker compose -f infra/compose.yaml up -d postgres
+pnpm run db:migrate
+pnpm run db:verify-pgboss
 pnpm run check
+pnpm run test:integration
 ```
 
-Implemented checks: Prettier, ESLint, TypeScript project references, Vitest unit tests, dependency-boundary scan, internal documentation link validation, and secret scanning in CI. PostgreSQL integration tests, production build, and browser isolation tests are planned for later M1 tasks once the database and web app exist.
+Implemented checks: Prettier, ESLint, TypeScript project references, Vitest unit tests, dependency-boundary scan, internal documentation link validation, PostgreSQL integration tests, pg-boss privilege verification, and secret scanning in CI. Production build and browser isolation tests are planned for later M1 tasks once the web app exists.

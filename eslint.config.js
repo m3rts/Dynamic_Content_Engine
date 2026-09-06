@@ -10,6 +10,7 @@ export default tseslint.config(
       "**/coverage/**",
       "scripts/**",
       "eslint.config.js",
+      "packages/db/src/integration/**",
       "pnpm-lock.yaml",
     ],
   },
