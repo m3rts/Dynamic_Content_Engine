@@ -53,6 +53,10 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app TO dce_web, dce_worker_app;
 REVOKE ALL ON TABLE control.dispatch_record FROM dce_queue;
 REVOKE ALL ON ALL TABLES IN SCHEMA app FROM dce_queue;
 
+GRANT USAGE ON SCHEMA app TO dce_web, dce_worker_app;
+GRANT USAGE ON SCHEMA control TO dce_web, dce_worker_app, dce_queue;
+GRANT USAGE ON SCHEMA audit TO dce_web, dce_worker_app;
+
 ALTER DEFAULT PRIVILEGES FOR ROLE dce_migrator IN SCHEMA app
   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dce_web, dce_worker_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE dce_migrator IN SCHEMA audit
