@@ -45,3 +45,7 @@ GRANT USAGE ON SCHEMA audit TO dce_web, dce_worker_app;
 GRANT USAGE ON SCHEMA boss TO dce_boss_migrator, dce_queue;
 
 GRANT dce_definer TO dce_migrator;
+
+GRANT ALL ON SCHEMA auth, app, control, audit TO dce_migrator;
+GRANT ALL ON SCHEMA boss TO dce_boss_migrator;
+GRANT CREATE ON DATABASE dce TO dce_migrator, dce_boss_migrator;
