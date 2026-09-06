@@ -1,7 +1,28 @@
 title = "Dynamic Content Engine gitleaks config"
 
-[allowlist]
-description = "Allow synthetic auth placeholders in integration tests"
-paths = [
-  '''apps/web/src/integration/.*\.test\.ts$''',
+[extend]
+useDefault = true
+
+# Allow only the runtime-generated auth secret assignment in the one integration test.
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Runtime-generated BETTER_AUTH_SECRET in client-context integration test"
+condition = "AND"
+paths = ['''apps/web/src/integration/client-context\.test\.ts$''']
+regexTarget = "line"
+regexes = [
+  '''process\.env\.BETTER_AUTH_SECRET\s*=\s*randomUUID\(\)\.replace\(/\^-/g,\s*""\);''',
+]
+
+# Historical PR commit used a fixed synthetic placeholder on the same line; keep that
+# specific exception rather than excluding the whole integration directory.
+[[rules.allowlists]]
+description = "Retired synthetic BETTER_AUTH_SECRET literal in client-context integration test"
+condition = "AND"
+paths = ['''apps/web/src/integration/client-context\.test\.ts$''']
+regexTarget = "line"
+regexes = [
+  '''process\.env\.BETTER_AUTH_SECRET\s*=\s*"integration-test-secret-012345678901";''',
 ]

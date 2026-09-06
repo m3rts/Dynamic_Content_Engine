@@ -12,7 +12,7 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:unit": "vitest run",
-    "test:boundaries": "node --test scripts/check-boundaries.test.mjs scripts/load-root-env.test.mjs",
+    "test:boundaries": "node --test scripts/check-boundaries.test.mjs scripts/load-root-env.test.mjs scripts/gitleaks-config.test.mjs",
     "test:integration": "pnpm --filter @dce/db run test:integration && pnpm --filter @dce/web run test:integration",
     "db:migrate": "pnpm --filter @dce/db run migrate",
     "db:verify-pgboss": "pnpm --filter @dce/db run verify:pgboss",

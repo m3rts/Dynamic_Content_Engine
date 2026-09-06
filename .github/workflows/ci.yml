@@ -73,17 +73,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          CONFIG_ARGS=(--config .gitleaks.toml)
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE="${{ github.event.pull_request.base.sha }}"
             HEAD="${{ github.event.pull_request.head.sha }}"
             echo "Scanning PR commit range ${BASE}..${HEAD}"
-            gitleaks detect --source . --redact --verbose --log-opts="${BASE}..${HEAD}"
+            gitleaks detect --source . --redact --verbose "${CONFIG_ARGS[@]}" --log-opts="${BASE}..${HEAD}"
           elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
             echo "Scanning push commit range ${{ github.event.before }}..${{ github.sha }}"
-            gitleaks detect --source . --redact --verbose --log-opts="${{ github.event.before }}..${{ github.sha }}"
+            gitleaks detect --source . --redact --verbose "${CONFIG_ARGS[@]}" --log-opts="${{ github.event.before }}..${{ github.sha }}"
           else
             echo "Scanning full repository history"
-            gitleaks detect --source . --redact --verbose
+            gitleaks detect --source . --redact --verbose "${CONFIG_ARGS[@]}"
           fi
 
       - name: Dependency audit
