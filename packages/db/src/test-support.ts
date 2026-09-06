@@ -60,7 +60,6 @@ export async function prepareQueueDatabase(adminUrl: string): Promise<void> {
 }
 
 export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixture> {
-  const migratorUrl = roleDatabaseUrl(adminUrl, "dce_migrator", "dce_migrator");
   const fixture: TestFixture = {
     agencyA: "11111111-1111-4111-8111-111111111111",
     agencyB: "22222222-2222-4222-8222-222222222222",
@@ -72,7 +71,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
     runB: "88888888-8888-4888-8888-888888888888",
   };
 
-  const client = new pg.Client({ connectionString: migratorUrl });
+  const client = new pg.Client({ connectionString: adminUrl });
   await client.connect();
   try {
     await client.query(
