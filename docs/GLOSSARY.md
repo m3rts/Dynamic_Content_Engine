@@ -20,7 +20,8 @@
 | Stage profile | Provider/model/settings/cost configuration for one stage |
 | Pipeline revision | Validated graph of registered stages and approval dependencies pinned by a run |
 | Extension pack | Versioned schema/configuration for bounded industry-specific fields |
-| Run / attempt | User-requested workflow execution / one stage execution or retry |
+| Run | User-requested workflow execution spanning pipeline stages |
+| StageAttempt | One execution or retry of a single pipeline stage, with its own lifecycle |
 | Fixture | Labelled synthetic deterministic input/output used without a provider call |
 | Egress | Data leaving the app to an external service; independent of where the app is hosted |
 | Reservation | Conservative hold against internal provider-spend limits, not a customer invoice |

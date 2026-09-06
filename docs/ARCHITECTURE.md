@@ -34,7 +34,7 @@ flowchart LR
   Worker --> Egress[Policy and spending gate]
   Egress --> Adapter[Stage-specific provider adapters]
   Adapter --> Fixture[Offline fixtures]
-  Adapter -. opt-in .-> APIs[External AI APIs]
+  Egress -. opt-in .-> APIs[External AI APIs]
   Web --> Bundle[Versioned design bundle]
   Bundle --> Plugin[User-run Figma plugin]
 ```

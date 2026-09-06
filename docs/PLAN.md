@@ -1,6 +1,6 @@
 # Implementation plan v0.2
 
-Status: architecture revision complete for review; implementation pending. Owner-authorized feedback processing is not a claim of completed controls. No app, live integrations or hosted service exists. [REVIEW_RESOLUTION](REVIEW_RESOLUTION.md) maps every review section to a decision/gate.
+Status: Tech VP approved the architecture at ed1ebfc on 6 September 2026, as relayed by the owner; implementation pending. Owner-authorized feedback processing is not a claim of completed controls. No app, live integrations or hosted service exists. [REVIEW_RESOLUTION](REVIEW_RESOLUTION.md) maps every review section to a decision/gate.
 
 Accountable lead for this documentation revision: Codex. Product owner/merge authority: m3rts. Implementation ownership below is by role; an actual contributor must claim the role before a task starts. Tech VP and QA/QC/InfoSec are review roles, not automatically dispatched agents. Nobody should start overlapping work based on a role label alone.
 
@@ -18,11 +18,11 @@ Accountable lead for this documentation revision: Codex. Product owner/merge aut
 | M7 — hosting decision | Operations lead + owner | Hosting/security plan only until authorized | Explicit provision approval; TLS/MFA/email/recovery; scanner; monitoring; supply-chain gates; measured sizing |
 | M8 — client access (later) | Identity lead + owner | Optional SSO/SCIM, sharing and self-service | External-user access/deprovision/separation tests and account-specific protocol support |
 
-M1-F can run independently during foundation; no existing agent is assigned automatically. M1.5 validates interfaces early without claiming the full M4/M5 capabilities. Never mark AC-02's full workflow proven by M1's skeleton test. M1.5 can use one visible client for the sample story but must keep a second synthetic tenant for negative tests.
+M1-F can run independently during foundation; no existing agent is assigned automatically. M1.5 validates interfaces early without claiming the full M4/M5 capabilities. Never mark AC-02's full workflow proven by M1's skeleton test. M1.5 uses one synthetic client for the sample story and a second synthetic tenant for negative tests. Real client data remains deferred to M6 after rights, retention and privacy review.
 
 ## M1 task order
 
-1. Foundation lead records exact stable dependency versions/compatibility, package manager/runtime pins and minimal dependency approvals; prepares required CI checks and branch protection.
+1. Foundation lead lands CI and the merge-protection setup first, alongside the minimal pinned workspace needed to execute meaningful checks. Record exact stable dependency versions/compatibility, package manager/runtime pins and dependency approvals. Do not add application features ahead of this gate.
 2. Data lead defines scoped schema/grants and control-function contracts; one person owns migration ordering. Prove queue runtime privilege requirements before accepting role grants.
 3. Identity lead wires bootstrap/session/capabilities to a single API boundary; shared tests cover pool/caching and denied storage access.
 4. Interface lead applies design tokens, translation keys and local fonts; worker lead adds fixture-only dispatcher skeleton with no provider keys.

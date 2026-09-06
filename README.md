@@ -2,7 +2,7 @@
 
 A client-agnostic agency workspace for turning business objectives, audience evidence, and brand guidance into creative concepts, editable assets, and evidence-informed next experiments.
 
-**Status: architecture baseline v0.2 — documentation only.** Nothing has been implemented or deployed. This is the owner-authorized revised design baseline; reviewers have not yet re-reviewed v0.2 and implementation is pending. Updated 6 September 2026.
+**Status: architecture baseline v0.2 — documentation only.** Nothing has been implemented or deployed. This is the owner-authorized revised design baseline; the Tech VP approved v0.2 at ed1ebfc on 6 September 2026, as relayed by the owner. A separate renewed QA/QC/InfoSec approval has not been recorded; implementation is pending. Updated 6 September 2026.
 
 ## Start here
 

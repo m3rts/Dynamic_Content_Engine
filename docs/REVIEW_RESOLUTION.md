@@ -1,6 +1,6 @@
 # Review resolution — architecture v0.2
 
-Date: 6 September 2026. Prepared by Codex under the owner's authorization to process both reviews. This is a **design disposition**, not a claim that reviewers re-approved v0.2 or that runtime controls passed. Both reviews remain verbatim in [Grok feedback](../Feedback/1_Grok_Feedback.md) and [Claude feedback](../Feedback/2_CLAUDE_FEEDBACK.md). Their references to `docs/Grok_Feedback.md` are historical; actual files use the links here.
+Date: 6 September 2026. Prepared by Codex under the owner's authorization to process both reviews. This is a **design disposition**. The Tech VP approved v0.2 at ed1ebfc on 6 September 2026, as relayed by the owner; a separate renewed QA/QC/InfoSec approval has not been recorded. Runtime controls remain unimplemented and unverified. Both reviews remain verbatim in [Grok feedback](../Feedback/1_Grok_Feedback.md) and [Claude feedback](../Feedback/2_CLAUDE_FEEDBACK.md). Their references to `docs/Grok_Feedback.md` are historical; actual files use the links here.
 
 Every actionable recommendation and summary section is mapped below. Repeated recommendations in Claude's §11/§13 are cross-covered by their originating sections. Accepted means specified in design; adapted means the objective is retained with an explicit technical correction; deferred means its enabling gate is explicit, not an invisible backlog.
 
@@ -72,3 +72,9 @@ Every actionable recommendation and summary section is mapped below. Repeated re
 - `2_CLAUDE_FEEDBACK.md` SHA-256: `86fa5dc6a95ae06ca0e63fd9b3705c7edce3444f7dee306ee7761e1a45ebd372`
 
 Architecture changes are documented; every implementation proof remains pending. Remaining external inputs have accountable owners, deadlines and fail-closed defaults in PLAN's external-input register. Do not represent “all feedback processed” as “no possible bugs/security gaps” or permission to provision/deploy. New findings belong in a dated follow-up, with the relevant canonical document updated in the same PR.
+
+## Post-review clarifications — 6 September 2026
+
+The owner relayed the Tech VP's approval of ed1ebfc, including feedback hash/link verification. Two nonblocking residuals were CI-first sequencing and stale review status; PLAN and current status text now reflect them. The original 55-row matrix remains unchanged.
+
+CodeRabbit's five comments on PR #1 were verified against the documents and addressed: external API edge originates at Egress; pipeline skipping cannot remove mandatory controls; Run and StageAttempt have distinct glossary entries; local secrets require owner-only storage and exclusion from application backups/sync; M1.5 explicitly uses synthetic clients. These are clarifications of the baseline, not new application behavior or evidence of implemented security. CI remains the first foundation task.

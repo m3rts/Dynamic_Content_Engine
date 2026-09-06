@@ -1,6 +1,6 @@
 # Architecture decision register v0.2
 
-Date: 6 September 2026. Architectural author/accountable documentation lead: Codex. Product owner: m3rts. Review inputs: Tech VP (Claude) and QA/QC/InfoSec (Grok). Owner authorized processing both reviews and rebuilding the architecture in this conversation. This establishes a **revised design baseline**, not an implemented or independently security-approved system. Reviewers have not yet re-reviewed v0.2.
+Date: 6 September 2026. Architectural author/accountable documentation lead: Codex. Product owner: m3rts. Review inputs: Tech VP (Claude) and QA/QC/InfoSec (Grok). Owner authorized processing both reviews and rebuilding the architecture in this conversation. This establishes a **revised design baseline**, not an implemented or independently security-approved system. The Tech VP approved v0.2 at ed1ebfc on 6 September 2026, as relayed by the owner. A separate renewed QA/QC/InfoSec approval has not been recorded. Subsequent review-status and CodeRabbit clarifications do not imply a new reviewer approval.
 
 Historical ADR-001–010 were authored on 6 September 2026 by Codex; reviewer names were absent then and are backfilled here as review inputs, not retroactive approvals. [Original v0.1 register](history/DECISIONS-v0.1.md) is preserved unchanged for history. Its unresolved list/status terminology does not override current documents.
 
