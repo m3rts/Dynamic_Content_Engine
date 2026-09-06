@@ -2,8 +2,7 @@
 
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync } from "node:fs";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,11 +10,10 @@ import { test } from "node:test";
 
 const repoRoot = fileURLToPath(new URL("../", import.meta.url));
 const configPath = join(repoRoot, ".gitleaks.toml");
-const violationFixture = join(
+const allowedFixture = join(
   repoRoot,
-  "scripts/fixtures/gitleaks-violations/apps/web/src/integration/should-flag.test.ts",
+  "apps/web/src/integration/client-context.test.ts",
 );
-const allowedFixture = join(repoRoot, "apps/web/src/integration/client-context.test.ts");
 
 function gitleaksCommand() {
   const installed = spawnSync("gitleaks", ["version"], { encoding: "utf8" });
@@ -66,6 +64,17 @@ function runDetect(gitleaksArgs, source) {
   };
 }
 
+function writeIntegrationLeakFixture(rootDir) {
+  const integrationDir = join(rootDir, "apps/web/src/integration");
+  mkdirSync(integrationDir, { recursive: true });
+  const fixturePath = join(integrationDir, "should-flag.test.ts");
+  writeFileSync(
+    fixturePath,
+    'export const leakedApiKey = "8e4f73c6-79b6-4500-aa26-55bbf2188fb4";\n',
+  );
+  return fixturePath;
+}
+
 test("gitleaks config extends default rules without broad integration exclusions", () => {
   const config = readFileSync(configPath, "utf8");
   assert.match(config, /\[extend\]/);
@@ -75,13 +84,17 @@ test("gitleaks config extends default rules without broad integration exclusions
 });
 
 test("detects synthetic secrets inside integration-test paths", () => {
-  const result = runDetect(["--verbose"], violationFixture);
+  const fixtureRoot = mkdtempSync(join(tmpdir(), "dce-gitleaks-fixture-"));
+  writeIntegrationLeakFixture(fixtureRoot);
+
+  const result = runDetect(["--verbose"], fixtureRoot);
   if (result.skipped) {
     return;
   }
 
   assert.notEqual(result.status, 0, result.output);
   assert.match(result.output, /generic-api-key|leaks found/i);
+  assert.match(result.output, /apps\/web\/src\/integration\/should-flag\.test\.ts/i);
 });
 
 test("allows the runtime-generated client-context auth secret assignment", () => {
@@ -95,7 +108,11 @@ test("allows the runtime-generated client-context auth secret assignment", () =>
 });
 
 test("default rules remain active for non-allowlisted files", () => {
-  const result = runDetect(["--verbose"], join(repoRoot, "scripts/fixtures/gitleaks-violations"));
+  const fixtureRoot = mkdtempSync(join(tmpdir(), "dce-gitleaks-fixture-"));
+  const fixturePath = join(fixtureRoot, "leak.ts");
+  writeFileSync(fixturePath, 'export const token = "8e4f73c6-79b6-4500-aa26-55bbf2188fb4";\n');
+
+  const result = runDetect(["--verbose"], fixturePath);
   if (result.skipped) {
     return;
   }

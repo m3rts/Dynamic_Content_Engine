@@ -26,3 +26,13 @@ regexTarget = "line"
 regexes = [
   '''process\.env\.BETTER_AUTH_SECRET\s*=\s*"integration-test-secret-012345678901";''',
 ]
+
+# Ephemeral gitleaks regression fixture (generated at test runtime; one commit lingered in PR history).
+[[rules.allowlists]]
+description = "Removed gitleaks regression fixture secret"
+condition = "AND"
+paths = [
+  '''scripts/fixtures/gitleaks-violations/apps/web/src/integration/should-flag\.test\.ts$''',
+]
+regexTarget = "secret"
+regexes = ['''8e4f73c6-79b6-4500-aa26-55bbf2188fb4''']
