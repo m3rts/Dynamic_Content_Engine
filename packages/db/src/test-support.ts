@@ -56,7 +56,7 @@ export async function prepareFoundationDatabase(adminUrl: string): Promise<void>
 export async function prepareQueueDatabase(adminUrl: string): Promise<void> {
   await prepareFoundationDatabase(adminUrl);
   const bossMigratorUrl = roleDatabaseUrl(adminUrl, "dce_boss_migrator", "dce_boss_migrator");
-  const grantSql = await readMigration("0006_boss_queue_grants.sql");
+  const grantSql = await readMigration("0008_boss_queue_grants.sql");
 
   const boss = new PgBoss({
     connectionString: bossMigratorUrl,

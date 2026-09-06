@@ -14,7 +14,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@dce/policy": ["../../packages/policy/src/index.ts"],
+      "@dce/contracts": ["../../packages/contracts/src/index.ts"],
+      "@dce/db": ["../../packages/db/src/index.ts"],
+      "@dce/storage": ["../../packages/storage/src/index.ts"]
     },
     "resolveJsonModule": true
   },
