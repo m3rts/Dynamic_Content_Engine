@@ -20,6 +20,7 @@ if (!adminUrl) {
   });
 
   await boss.start();
+  await boss.createQueue("foundation-privilege-check");
   const jobId = await boss.send("foundation-privilege-check", { ok: true });
   if (!jobId) {
     throw new Error("pg-boss send failed under dce_queue");
