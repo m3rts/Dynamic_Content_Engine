@@ -57,17 +57,19 @@ jobs:
       - name: Unit tests
         run: pnpm run test:unit
 
+      - name: Install gitleaks
+        run: sudo bash scripts/install-gitleaks.sh
+
       - name: Boundary checker tests
         run: pnpm run test:boundaries
+        env:
+          GITLEAKS_REQUIRED: "1"
 
       - name: Dependency boundaries
         run: pnpm run check:boundaries
 
       - name: Documentation links
         run: pnpm run check:links
-
-      - name: Install gitleaks
-        run: sudo bash scripts/install-gitleaks.sh
 
       - name: Secret scan
         shell: bash

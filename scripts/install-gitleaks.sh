@@ -11,4 +11,4 @@ curl -sSfL "${GITLEAKS_URL}" -o "${GITLEAKS_ARCHIVE}"
 echo "${GITLEAKS_SHA256}  ${GITLEAKS_ARCHIVE}" | sha256sum -c -
 tar xzf "${GITLEAKS_ARCHIVE}" gitleaks
 install -m 755 gitleaks "${INSTALL_DIR}/gitleaks"
-gitleaks version
+"${INSTALL_DIR}/gitleaks" version

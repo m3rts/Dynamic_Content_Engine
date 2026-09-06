@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -12,32 +12,30 @@ const repoRoot = fileURLToPath(new URL("../", import.meta.url));
 const configPath = join(repoRoot, ".gitleaks.toml");
 const allowedFixture = join(repoRoot, "apps/web/src/integration/client-context.test.ts");
 
-function gitleaksCommand() {
-  const installed = spawnSync("gitleaks", ["version"], { encoding: "utf8" });
-  if (installed.status === 0) {
-    return ["gitleaks"];
-  }
-
-  try {
-    const installDir = mkdtempSync(join(tmpdir(), "dce-gitleaks-"));
-    execFileSync("bash", [join(repoRoot, "scripts/install-gitleaks.sh"), installDir], {
-      stdio: "pipe",
-      cwd: installDir,
-    });
-    return [join(installDir, "gitleaks")];
-  } catch {
+function resolveGitleaksBin() {
+  const candidate = process.env.GITLEAKS_BIN ?? "gitleaks";
+  const result = spawnSync(candidate, ["version"], { encoding: "utf8" });
+  if (result.status !== 0) {
     return null;
   }
+
+  return candidate;
 }
 
-function runDetect(gitleaksArgs, source) {
-  const command = gitleaksCommand();
-  if (!command) {
-    return { skipped: true, status: 0, output: "gitleaks unavailable" };
+function requireGitleaksBin() {
+  const bin = resolveGitleaksBin();
+  if (bin) {
+    return bin;
   }
 
+  assert.fail(
+    "gitleaks is required for config regression tests; install it with scripts/install-gitleaks.sh",
+  );
+}
+
+function runDetect(gitleaksBin, gitleaksArgs, source) {
   const result = spawnSync(
-    command[0],
+    gitleaksBin,
     [
       "detect",
       "--no-banner",
@@ -55,7 +53,6 @@ function runDetect(gitleaksArgs, source) {
   );
 
   return {
-    skipped: false,
     status: result.status ?? 1,
     output: `${result.stdout}\n${result.stderr}`,
   };
@@ -87,39 +84,30 @@ test("gitleaks config extends default rules without broad integration exclusions
 });
 
 test("detects synthetic secrets inside integration-test paths", () => {
+  const gitleaksBin = requireGitleaksBin();
   const fixtureRoot = mkdtempSync(join(tmpdir(), "dce-gitleaks-fixture-"));
   writeIntegrationLeakFixture(fixtureRoot);
 
-  const result = runDetect(["--verbose"], fixtureRoot);
-  if (result.skipped) {
-    return;
-  }
-
+  const result = runDetect(gitleaksBin, ["--verbose"], fixtureRoot);
   assert.notEqual(result.status, 0, result.output);
   assert.match(result.output, /generic-api-key|leaks found/i);
   assert.match(result.output, /apps\/web\/src\/integration\/should-flag\.test\.ts/i);
 });
 
 test("allows the runtime-generated client-context auth secret assignment", () => {
-  const result = runDetect(["--verbose"], allowedFixture);
-  if (result.skipped) {
-    return;
-  }
-
+  const gitleaksBin = requireGitleaksBin();
+  const result = runDetect(gitleaksBin, ["--verbose"], allowedFixture);
   assert.equal(result.status, 0, result.output);
   assert.match(result.output, /no leaks found/i);
 });
 
 test("default rules remain active for non-allowlisted files", () => {
+  const gitleaksBin = requireGitleaksBin();
   const fixtureRoot = mkdtempSync(join(tmpdir(), "dce-gitleaks-fixture-"));
   const fixturePath = join(fixtureRoot, "leak.ts");
   writeSyntheticSecretFile(fixturePath, "token");
 
-  const result = runDetect(["--verbose"], fixturePath);
-  if (result.skipped) {
-    return;
-  }
-
+  const result = runDetect(gitleaksBin, ["--verbose"], fixturePath);
   assert.notEqual(result.status, 0, result.output);
   assert.match(result.output, /generic-api-key|leaks found/i);
 });
