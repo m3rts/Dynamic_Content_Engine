@@ -7,7 +7,7 @@ import ts from "typescript";
 export const boundaryRules = [
   {
     id: "shared-packages",
-    from: /^packages\/(contracts|domain|policy|observability|db|storage|evals)(?:\/|$)/,
+    from: /^packages\/(contracts|domain|policy|observability|storage|evals)(?:\/|$)/,
     forbiddenModules: [
       /^apps\//,
       /^@dce\/providers(?:\/|$)/,
@@ -15,6 +15,19 @@ export const boundaryRules = [
       /^react(?:\/|$)/,
       /^pg-boss(?:\/|$)/,
       /^@aws-sdk\//,
+      /^openai(?:\/|$)/,
+      /^@anthropic-ai\//,
+    ],
+    forbiddenPaths: [/^apps(?:\/|$)/, /^packages\/providers(?:\/|$)/],
+  },
+  {
+    id: "packages-db",
+    from: /^packages\/db(?:\/|$)/,
+    forbiddenModules: [
+      /^apps\//,
+      /^@dce\/providers(?:\/|$)/,
+      /^next(?:\/|$)/,
+      /^react(?:\/|$)/,
       /^openai(?:\/|$)/,
       /^@anthropic-ai\//,
     ],
