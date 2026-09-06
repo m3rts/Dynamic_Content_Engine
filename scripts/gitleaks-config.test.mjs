@@ -10,10 +10,7 @@ import { test } from "node:test";
 
 const repoRoot = fileURLToPath(new URL("../", import.meta.url));
 const configPath = join(repoRoot, ".gitleaks.toml");
-const allowedFixture = join(
-  repoRoot,
-  "apps/web/src/integration/client-context.test.ts",
-);
+const allowedFixture = join(repoRoot, "apps/web/src/integration/client-context.test.ts");
 
 function gitleaksCommand() {
   const installed = spawnSync("gitleaks", ["version"], { encoding: "utf8" });
