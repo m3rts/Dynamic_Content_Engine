@@ -1,26 +1,38 @@
-# Architecture decision register
+# Architecture decision register v0.2
 
-Status vocabulary: user requirement, proposed baseline, accepted implementation, superseded. All technology choices below are proposed baseline until validated in implementation; user requirements are explicitly marked.
+Date: 6 September 2026. Architectural author/accountable documentation lead: Codex. Product owner: m3rts. Review inputs: Tech VP (Claude) and QA/QC/InfoSec (Grok). Owner authorized processing both reviews and rebuilding the architecture in this conversation. This establishes a **revised design baseline**, not an implemented or independently security-approved system. Reviewers have not yet re-reviewed v0.2.
 
-| ID | Status | Decision and consequence |
-|---|---|---|
-| ADR-001 | Proposed baseline | TypeScript across web/worker/plugin. Rust deferred because current workload is integration-heavy; revisit only for measured needs or team capability. |
-| ADR-002 | User requirement | Local development until functioning application and hosting authorization. No deployment automation now. |
-| ADR-003 | Proposed baseline | Modular monolith plus worker and PostgreSQL/pg-boss. Avoid Redis/microservices initially; shared DB couples capacity but reduces operational burden. |
-| ADR-004 | User requirement | Configurable model per stage, client-agnostic workflow, source/decision lineage. |
-| ADR-005 | Proposed baseline | Better Auth locally, replacing earlier managed-auth suggestion. Reduces external runtime dependency but requires operating authentication securely. Keep app roles independent. |
-| ADR-006 | Proposed baseline | User-run Figma plugin for editable canvas output. Manual bundle exchange first; unattended canvas production excluded. |
-| ADR-007 | User requirement | Space Grotesk and yellow/black/white for agency UI; exact yellow remains provisional. |
-| ADR-008 | Proposed baseline | Filesystem assets locally, S3 adapter later. Migration requires checksums/manifest and DB metadata reconciliation. |
-| ADR-009 | Proposed baseline | Client-scoped domain records and defense-in-depth RLS; owner agency access explicit. |
-| ADR-010 | Proposed baseline | CSV metrics first; no sales-lift claims from response-only metrics. |
+Historical ADR-001–010 were authored on 6 September 2026 by Codex; reviewer names were absent then and are backfilled here as review inputs, not retroactive approvals. [Original v0.1 register](history/DECISIONS-v0.1.md) is preserved unchanged for history. Its unresolved list/status terminology does not override current documents.
 
-For a new decision, append a dated entry with problem, alternatives, decision, status, owner/reviewer, consequences and migration/rollback. Never erase superseded decisions; link their replacements. Do not independently choose a different stack in an agent-specific instruction file.
+Status vocabulary: **user requirement**, **revised design baseline**, **verified implementation**, **superseded**. None is verified implementation yet. All rows below share the date/author/review-input metadata above. ADR-002/004/007 retain user-requirement status; other rows are revised design baseline. Changing one requires a dated rationale, consequences, reviewer and migration/rollback plan.
 
-## Unresolved before implementation milestones
+| ADR | Decision | Rationale | Alternatives / tradeoff | Migration / rollback |
+|---|---|---|---|---|
+| ADR-001 | TypeScript across web/worker/plugin; Rust deferred | One contract language; revisit only for measured need | Rust backend/mixed stacks add interface work | No runtime migration; change later requires a new ADR |
+| ADR-002 | Local until explicitly authorized hosting | Owner requirement; two runtime modes stay distinct | Hosted-first conflicts with requested development | No deployment to roll back; later environment changes gated M7 |
+| ADR-003 | Modular monolith + worker + PostgreSQL/pg-boss | Reduce services while keeping durable I/O | Redis/microservices deferred; shared DB needs pool limits | Queue schema migration tested under restricted runtime role |
+| ADR-004 | Stage-specific models and versioned client configuration | Reusable core with traceable provider selection | Single provider or client forks rejected | Pin profiles/pipelines; change active defaults only for new runs |
+| ADR-005 | Better Auth locally; app-owned capabilities | Offline login and stable identity seam | Hosted IdP deferred, not required for local auth | Link issuer/subject to internal ID; never migrate via email matching |
+| ADR-006 | User-run Figma plugin, manual bundle first | Editable output with explicit editor boundary | Unattended plugin/server canvas editing excluded | Version bundles; preserve prior managed frames |
+| ADR-007 | Space Grotesk; yellow/black/white agency UI | Owner branding; #FFD600 provisional | Client creative uses separate brand configuration | Token changes and Thai font acceptance tested |
+| ADR-008 | Local filesystem with later S3 adapter | No cloud dependency during development | Premature cloud assets excluded | Checksummed manifest migration and consistent restore |
+| ADR-009 | Scoped repositories plus RLS and role separation | Defense in depth without privileged client worker | Queue data and auth cannot share blanket client RLS | Scoped grants/transactions and partition access tested |
+| ADR-010 | CSV-first response learning | Available reports do not prove sales lift | Platform connectors and causal overclaims excluded | Pin mapping/dataset revisions and recompute findings |
+| ADR-011 | Internal provider cost controls in scope; client billing excluded | Resolve Grok OBJ-04 | Removing reserves would permit uncontrolled spend | Version ledger/rate cards; never rewrite settled usage |
+| ADR-012 | Worker exclusively drains content-free outbox | Close crash window and specify ownership | Web enqueue after commit rejected | Stable dispatch/effect keys tolerate duplicate delivery |
+| ADR-013 | API route handlers are sole client mutation boundary | One auth/CSRF policy and no private shared cache | Client Server Actions prohibited initially | Recheck pinned framework settings and cache/logout tests |
+| ADR-014 | Controlled provider egress inside worker | Enforce class/provider/cost before every model request | Arbitrary SDK/network calls prohibited | Roll back profiles/policies; keep disclosure ledger |
+| ADR-015 | Versioned pipeline, bounded extensions and prompt/rubric packs | Concrete reuse without a workflow editor | Arbitrary executable config/untyped metadata rejected | Read old versions; create new revisions for migrations |
+| ADR-016 | Quality evaluation with human anchor | Contract validity is insufficient evidence of creativity | Model-judge score alone cannot approve work | Keep baseline pointer and held-out comparisons |
+| ADR-017 | Monthly metric partitions at table introduction | Accept early schema choice with explicit maintenance costs | Single large unpartitioned table remains simpler but less aligned with retention | Partition-key uniqueness/FKs; test maintain/restore; no claim of free scale |
+| ADR-018 | Issuer/subject linked identities and typed multi-approvals | Avoid email identity coupling; preserve enterprise options | Single external subject or overwritten reviewer field rejected | Use additive linked identities and append-only events |
+| ADR-019 | Reservation uncertainty retained conservatively | Resolve worker-dies-after-billing case | TTL-only auto-release rejected | Sweeper/reconciliation append ledger adjustments |
+| ADR-020 | Thin end-to-end slice and early Figma/Thai spike | Validate contracts and external assumptions early | Horizontal-only delivery defers risk | Spikes do not bypass two-client/offline gates |
+| ADR-021 | Append-only events with limited hash-chain assurance | Detect ordinary mutation; state DB-admin limitation | Hash chain alone is not non-repudiation | Separate retention grants; hosted external digest anchor |
+| ADR-022 | Privacy lifecycle before real data, enterprise features later | No blanket legal assertions or premature hosting | Unbounded retention and silent provider deletion claims rejected | Deletion receipts/backup expiry/restore replay preserve honesty |
+| ADR-023 | Provider quotas plus conservative adaptive concurrency | Do not confuse CPU count with provider limits | Neither fixed 2 forever nor unmeasured 16 by default | Start 2, pilot ceiling 8; tune with metrics and ledger |
+| ADR-024 | Required CI and human merge ownership from M1 | Three coding contributors need deterministic gates | CodeRabbit-only gate rejected | No merge around broken checks; record platform limitations |
 
-- Exact framework/library versions and auth/queue compatibility: resolve in foundation.
-- Exact company yellow and Thai fallback font: confirm/validate in UI milestone.
-- Selected live models, budgets, provider data permissions: resolve before live adapters.
-- Report metric definitions and Figma library/component access: resolve in integration spikes.
-- Hosting provider/region, MFA configuration, real email and retention: resolve before hosting.
+## Implementation decisions with explicit gates
+
+Package versions/native queue timeout mapping: foundation lead, M1–2 compatibility tests. Exact client fonts/yellow: owner/production lead, M1-F/UI acceptance. Provider accounts/models/quotas: owner/provider lead, M3 opt-in. CSV definitions: data lead, M1.5/M5. Privacy/retention: owner, M6. Hosting/email/enterprise auth: owner/operations lead, M7–8. PLAN records safe behavior while these inputs are absent; none permits an implicit authorization bypass.

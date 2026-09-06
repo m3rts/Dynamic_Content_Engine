@@ -14,3 +14,18 @@ reviews:
       instructions: |
         Check server-side authorization, accessible interactions, offline behavior,
         and docs/DESIGN.md. Agency UI branding must not override client asset branding.
+    - path: "apps/worker/**"
+      instructions: |
+        Check RUNTIME and DATABASE: worker-only dispatch, trusted metadata lookup, scope revalidation, fencing, orphan reservations and no blind paid retries.
+    - path: "packages/db/**"
+      instructions: |
+        Check role grants, transaction-local scope, RLS policies, direct partition denial, scoped COPY staging and immutable audit grants against DATABASE.
+    - path: "packages/domain/**"
+      instructions: |
+        Check immutable revisions, multi-type approvals, evidence/claim boundaries and CUSTOMIZATION contracts.
+    - path: "packages/providers/**"
+      instructions: |
+        Check sole egress transport, client class/provider policy, shared quotas, budget controls, redaction and EVALS requirements.
+    - path: "apps/figma-plugin/**"
+      instructions: |
+        Check bounded bundle validation, editable nodes, font/Thai/overflow handling, managed-frame repeat import and secret exclusion.

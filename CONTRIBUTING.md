@@ -24,3 +24,7 @@ Include branch and commit, completed scope, changed contracts/files, checks run,
 ## Planned CI
 
 Once implementation starts: formatting, lint, TypeScript checks, meaningful unit tests, PostgreSQL integration tests, production build, migration validation, and focused browser tests for key flows. Add secret scanning and dependency review. CI uses synthetic two-client fixtures and never production keys or data. CodeRabbit remains separate from required deterministic checks. Configure main-branch protections in GitHub after a default branch exists; they are not configured by these documents.
+
+## v0.2 coordination and gates
+
+PLAN's M1 merge gates are mandatory from the first feature PR. The owner remains the human merge authority; CodeRabbit findings are advisory until reconciled. A new dependency addition needs an explicit human approval entry and purpose/version/license review. Each PR cites AC IDs and review-resolution IDs it satisfies, updates the responsible canonical document, and names a single implementation owner plus reviewer. Claim shared contract/migration/lockfile ownership before editing. Include rollback and no-egress verification where relevant. Architecture-only changes validate links, decision IDs and review coverage; do not fabricate runtime test results.
