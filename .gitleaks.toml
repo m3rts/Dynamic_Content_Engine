@@ -1,0 +1,7 @@
+title = "Dynamic Content Engine gitleaks config"
+
+[allowlist]
+description = "Allow synthetic auth placeholders in integration tests"
+paths = [
+  '''apps/web/src/integration/.*\.test\.ts$''',
+]
