@@ -46,6 +46,16 @@ CREATE POLICY audit_event_insert ON audit.audit_event
     AND client_id = current_setting('dce.client_id', true)::uuid
   );
 
+CREATE POLICY client_membership_definer_validate ON app.client_membership
+  FOR SELECT
+  TO dce_definer
+  USING (true);
+
+CREATE POLICY workflow_run_definer_validate ON app.workflow_run
+  FOR SELECT
+  TO dce_definer
+  USING (true);
+
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA app TO dce_web, dce_worker_app;
 GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA audit TO dce_web, dce_worker_app;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app TO dce_web, dce_worker_app;
