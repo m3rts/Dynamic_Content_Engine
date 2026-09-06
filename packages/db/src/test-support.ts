@@ -20,6 +20,14 @@ export type TestFixture = {
   runB: string;
 };
 
+export function migratorDatabaseUrl(baseUrl: string): string {
+  if (process.env.MIGRATOR_DATABASE_URL) {
+    return process.env.MIGRATOR_DATABASE_URL;
+  }
+
+  return roleDatabaseUrl(baseUrl, "dce_migrator", "dce_migrator");
+}
+
 export async function bootstrapDatabase(adminUrl: string): Promise<void> {
   const initSql = await readFile(path.join(repoRoot, "infra/postgres/init/01-roles.sql"), "utf8");
   const client = new pg.Client({ connectionString: adminUrl });
@@ -31,31 +39,9 @@ export async function bootstrapDatabase(adminUrl: string): Promise<void> {
   }
 }
 
-export async function applyRuntimeGrants(adminUrl: string): Promise<void> {
-  const client = new pg.Client({ connectionString: adminUrl });
-  await client.connect();
-  try {
-    await client.query(`
-      GRANT USAGE ON SCHEMA app, control, audit TO dce_web, dce_worker_app, dce_definer;
-      GRANT USAGE ON SCHEMA control, boss TO dce_queue;
-      GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA app TO dce_web, dce_worker_app;
-      GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA audit TO dce_web, dce_worker_app;
-      GRANT EXECUTE ON FUNCTION app.set_request_scope(uuid, uuid, uuid) TO dce_web, dce_worker_app;
-      GRANT EXECUTE ON FUNCTION control.insert_dispatch_record(
-        uuid, uuid, uuid, uuid, uuid, uuid, text, text, text
-      ) TO dce_web;
-      GRANT EXECUTE ON FUNCTION control.claim_pending_dispatch_records(integer) TO dce_queue;
-      GRANT EXECUTE ON FUNCTION control.get_dispatch_metadata(uuid) TO dce_queue, dce_worker_app;
-    `);
-  } finally {
-    await client.end();
-  }
-}
-
 export async function prepareFoundationDatabase(adminUrl: string): Promise<void> {
   await bootstrapDatabase(adminUrl);
-  await applyMigrations(adminUrl, { through: "0005_rls_and_grants.sql" });
-  await applyRuntimeGrants(adminUrl);
+  await applyMigrations(migratorDatabaseUrl(adminUrl), { through: "0005_rls_and_grants.sql" });
 }
 
 export async function prepareQueueDatabase(adminUrl: string): Promise<void> {

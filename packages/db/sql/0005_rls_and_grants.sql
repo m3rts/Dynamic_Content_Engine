@@ -50,6 +50,9 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA app TO dce_web, dce
 GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA audit TO dce_web, dce_worker_app;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app TO dce_web, dce_worker_app;
 
+REVOKE ALL ON TABLE app.schema_migration FROM dce_web, dce_worker_app;
+GRANT SELECT, INSERT ON TABLE app.schema_migration TO dce_migrator;
+
 REVOKE ALL ON TABLE control.dispatch_record FROM dce_queue;
 REVOKE ALL ON ALL TABLES IN SCHEMA app FROM dce_queue;
 

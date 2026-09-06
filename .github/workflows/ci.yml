@@ -124,6 +124,9 @@ jobs:
         env:
           PGPASSWORD: dce_test
 
+      - name: Apply migrations as dce_migrator
+        run: pnpm run db:migrate
+
       - name: Typecheck
         run: pnpm run typecheck
 

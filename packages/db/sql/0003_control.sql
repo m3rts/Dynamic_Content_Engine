@@ -20,8 +20,9 @@ CREATE INDEX dispatch_record_pending_idx
 
 REVOKE ALL ON TABLE control.dispatch_record FROM PUBLIC;
 GRANT USAGE ON SCHEMA app, control TO dce_definer;
+GRANT CREATE ON SCHEMA control TO dce_definer;
 GRANT SELECT, INSERT, UPDATE ON TABLE control.dispatch_record TO dce_definer;
-GRANT SELECT ON TABLE app.workflow_run TO dce_definer;
+GRANT SELECT ON TABLE app.workflow_run, app.client_membership TO dce_definer;
 
 CREATE OR REPLACE FUNCTION control.insert_dispatch_record(
   p_dispatch_id uuid,
@@ -52,6 +53,18 @@ BEGIN
      OR p_client_id::text <> v_scope_client
      OR p_actor_id::text <> v_scope_actor THEN
     RAISE EXCEPTION 'scope mismatch';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM app.client_membership m
+    WHERE m.agency_id = p_agency_id
+      AND m.client_id = p_client_id
+      AND m.user_id = p_actor_id
+      AND m.status = 'active'
+      AND m.role IN ('owner', 'operator')
+  ) THEN
+    RAISE EXCEPTION 'actor not authorized to dispatch';
   END IF;
 
   IF NOT EXISTS (
