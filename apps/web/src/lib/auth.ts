@@ -1,3 +1,5 @@
+import "../../../../scripts/load-root-env.mjs";
+
 import { betterAuth } from "better-auth";
 import { Pool } from "pg";
 
@@ -63,6 +65,9 @@ export const auth: AuthInstance = new Proxy({} as AuthInstance, {
       : value;
   },
   has(_target, prop) {
+    if (prop === "handler") {
+      return true;
+    }
     return prop in getAuth();
   },
 });
