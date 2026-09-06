@@ -16,6 +16,9 @@
     "test:integration": "pnpm --filter @dce/db run test:integration",
     "db:migrate": "pnpm --filter @dce/db run migrate",
     "db:verify-pgboss": "pnpm --filter @dce/db run verify:pgboss",
+    "owner:bootstrap": "pnpm --filter @dce/db run owner:bootstrap",
+    "dev": "pnpm --filter @dce/web run dev",
+    "build": "pnpm --filter @dce/web run build",
     "check:boundaries": "node scripts/check-boundaries.mjs",
     "check:links": "node scripts/check-doc-links.mjs",
     "check": "pnpm run format && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run test:boundaries && pnpm run check:boundaries && pnpm run check:links"

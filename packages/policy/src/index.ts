@@ -1,23 +1,92 @@
 export type Capability =
   | "client.read"
-  | "client.write"
+  | "brief.write"
+  | "concept.write"
+  | "run.create"
+  | "run.cancel"
+  | "report.import"
+  | "review.creative"
+  | "review.claims"
+  | "review.production"
+  | "asset.export"
   | "client.export"
   | "client.delete"
-  | "run.create"
-  | "run.cancel";
+  | "users.manage"
+  | "profiles.publish"
+  | "credentials.manage"
+  | "budgets.manage"
+  | "audit.read";
+
+export type MembershipRole = "owner" | "operator" | "reviewer";
 
 export type PolicyDecision =
   | { allowed: true }
-  | { allowed: false; reason: "missing_capability" | "unknown_capability" };
+  | { allowed: false; reason: "missing_capability" | "unknown_capability" | "disabled_membership" };
 
 const knownCapabilities = new Set<Capability>([
   "client.read",
-  "client.write",
-  "client.export",
-  "client.delete",
+  "brief.write",
+  "concept.write",
   "run.create",
   "run.cancel",
+  "report.import",
+  "review.creative",
+  "review.claims",
+  "review.production",
+  "asset.export",
+  "client.export",
+  "client.delete",
+  "users.manage",
+  "profiles.publish",
+  "credentials.manage",
+  "budgets.manage",
+  "audit.read",
 ]);
+
+/** Capability grants by membership role (IDENTITY v0.2 M1 table). */
+export const roleCapabilities: Readonly<Record<MembershipRole, readonly Capability[]>> = {
+  owner: [
+    "client.read",
+    "brief.write",
+    "concept.write",
+    "run.create",
+    "run.cancel",
+    "report.import",
+    "review.creative",
+    "review.claims",
+    "review.production",
+    "asset.export",
+    "client.export",
+    "client.delete",
+    "users.manage",
+    "profiles.publish",
+    "credentials.manage",
+    "budgets.manage",
+    "audit.read",
+  ],
+  operator: [
+    "client.read",
+    "brief.write",
+    "concept.write",
+    "run.create",
+    "run.cancel",
+    "report.import",
+    "asset.export",
+    "audit.read",
+  ],
+  reviewer: [
+    "client.read",
+    "review.creative",
+    "review.claims",
+    "review.production",
+    "asset.export",
+    "audit.read",
+  ],
+};
+
+export function capabilitiesForRole(role: MembershipRole): readonly Capability[] {
+  return roleCapabilities[role];
+}
 
 /** Pure capability evaluation; authorization context is supplied by callers. */
 export function evaluateCapability(
@@ -33,4 +102,16 @@ export function evaluateCapability(
   }
 
   return { allowed: true };
+}
+
+export function evaluateMembershipCapability(
+  role: MembershipRole,
+  required: Capability,
+  options: { membershipStatus?: "active" | "disabled" } = {},
+): PolicyDecision {
+  if (options.membershipStatus === "disabled") {
+    return { allowed: false, reason: "disabled_membership" };
+  }
+
+  return evaluateCapability(capabilitiesForRole(role), required);
 }

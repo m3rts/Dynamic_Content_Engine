@@ -2,7 +2,7 @@
 
 A client-agnostic agency workspace for turning business objectives, audience evidence, and brand guidance into creative concepts, editable assets, and evidence-informed next experiments.
 
-**Status: M1 foundation in progress — pinned workspace and CI landed; application runtime not yet implemented.** Architecture baseline v0.2 was approved at ed1ebfc on 6 September 2026. Updated 6 September 2026.
+**Status: M1 foundation in progress — database and identity boundary landed; worker/UI skeleton still pending.** Architecture baseline v0.2 was approved at ed1ebfc on 6 September 2026. Updated 6 September 2026.
 
 ## Start here
 
@@ -31,8 +31,6 @@ All contributors, including Codex, Claude, and Grok, must read [AGENTS.md](AGENT
 - Thailand supermarket is the first pilot, not a restriction embedded in the domain model.
 - Impressions, clicks, and engagement support response learning; they do not establish sales impact.
 
-There are no runnable application commands yet. The foundation workspace supports deterministic checks only.
-
 ## Foundation setup (M1)
 
 Requires Node.js 22.12+ and pnpm 9.15.9 (see `.nvmrc` and `packageManager` in `package.json`).
@@ -40,11 +38,23 @@ Requires Node.js 22.12+ and pnpm 9.15.9 (see `.nvmrc` and `packageManager` in `p
 ```bash
 corepack enable
 pnpm install --frozen-lockfile
+cp .env.example .env   # set BETTER_AUTH_SECRET (openssl rand -base64 32)
 docker compose -f infra/compose.yaml up -d postgres
 pnpm run db:migrate
-pnpm run db:verify-pgboss
+pnpm run owner:bootstrap
+pnpm run dev           # http://127.0.0.1:3000
 pnpm run check
 pnpm run test:integration
 ```
 
-Implemented checks: Prettier, ESLint, TypeScript project references, Vitest unit tests, dependency-boundary scan, internal documentation link validation, PostgreSQL integration tests, pg-boss privilege verification, and secret scanning in CI. Production build and browser isolation tests are planned for later M1 tasks once the web app exists.
+Implemented checks: Prettier, ESLint, TypeScript project references, Vitest unit tests, Next.js production build, dependency-boundary scan, internal documentation link validation, PostgreSQL integration tests, pg-boss privilege verification, and secret scanning in CI. Browser isolation tests are planned once authenticated pages exist.
+
+## Local endpoints (M1 task 3)
+
+| Endpoint                                                 | Purpose                             |
+| -------------------------------------------------------- | ----------------------------------- |
+| `http://127.0.0.1:3000`                                  | Minimal web shell                   |
+| `http://127.0.0.1:3000/api/auth/*`                       | Better Auth session routes          |
+| `http://127.0.0.1:3000/api/v1/clients/:clientId/context` | Scoped API boundary (`client.read`) |
+
+Owner bootstrap is CLI-only (`pnpm run owner:bootstrap`); it has no HTTP endpoint.

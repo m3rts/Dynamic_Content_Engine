@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { evaluateCapability, type Capability } from "./index.js";
+import { evaluateCapability, evaluateMembershipCapability, type Capability } from "./index.js";
 
 describe("evaluateCapability", () => {
   it("allows operations when the capability is granted", () => {
@@ -20,6 +20,19 @@ describe("evaluateCapability", () => {
     expect(evaluateCapability(["client.read"], "not.real" as Capability)).toEqual({
       allowed: false,
       reason: "unknown_capability",
+    });
+  });
+});
+
+describe("evaluateMembershipCapability", () => {
+  it("grants operator run creation", () => {
+    expect(evaluateMembershipCapability("operator", "run.create")).toEqual({ allowed: true });
+  });
+
+  it("denies operator user administration", () => {
+    expect(evaluateMembershipCapability("operator", "users.manage")).toEqual({
+      allowed: false,
+      reason: "missing_capability",
     });
   });
 });

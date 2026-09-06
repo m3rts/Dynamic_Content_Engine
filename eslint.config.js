@@ -7,6 +7,7 @@ export default tseslint.config(
       "**/dist/**",
       "**/node_modules/**",
       "**/.next/**",
+      "apps/web/next.config.ts",
       "**/coverage/**",
       "scripts/**",
       "eslint.config.js",
@@ -21,6 +22,15 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         project: ["./tsconfig.eslint.json"],
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    files: ["apps/web/**/*.ts", "apps/web/**/*.tsx"],
+    languageOptions: {
+      parserOptions: {
+        project: ["./apps/web/tsconfig.json"],
         tsconfigRootDir: import.meta.dirname,
       },
     },

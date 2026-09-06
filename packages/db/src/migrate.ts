@@ -9,7 +9,7 @@ if (!connectionString) {
   process.exitCode = 1;
 } else {
   const applied = await applyMigrations(connectionString, {
-    through: "0005_rls_and_grants.sql",
+    through: "0007_auth_and_identity.sql",
   });
   if (applied.length === 0) {
     console.log("No pending migrations.");
