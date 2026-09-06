@@ -30,3 +30,9 @@ Provide empty/error/loading/success states, keyboard operation, labelled fields,
 Use structured text/layout placeholders for concept direction until real images exist; do not imply generated artwork is available. Never show fabricated performance as live client data. The app should foreground the decision and next action, not technical orchestration details.
 
 Font source: [Space Grotesk repository and license](https://github.com/floriankarsten/space-grotesk).
+
+## Enforced implementation rules (M1 onward)
+
+Components use semantic tokens, not ad-hoc foreground/background combinations. Required design checks reject white-on-yellow/yellow-on-white text and yellow-only focus/status. Test contrast from actual token pairs: normal text ≥4.5:1, large text ≥3:1, relevant controls/focus ≥3:1; validate the chosen accessibility standard with rendered states rather than treating token lint as complete coverage. Automated checks plus keyboard/200%-zoom/browser QA must pass before UI acceptance.
+
+All UI text uses translation keys and locale-aware formatting as defined in CUSTOMIZATION. Self-host Space Grotesk and a licensed Thai-capable fallback with license files; no runtime font CDN. Brand fonts in client Figma output are a separate permission/availability check. Pending exact owner yellow remains #FFD600 and is labelled provisional in the decision register.

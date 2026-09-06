@@ -20,4 +20,8 @@ Read README.md, docs/ARCHITECTURE.md, docs/DECISIONS.md, and the relevant domain
 
 ## Conflict handling
 
-User instructions take precedence. Among repository documents, the newest accepted decision supersedes an older proposal; otherwise ARCHITECTURE is canonical for system boundaries, CONTRACTS for data formats, and IDENTITY for access rules. Report conflicts and amend the relevant document rather than silently choosing a new architecture.
+User instructions take precedence. Among repository documents, the newest current design decision supersedes older proposals; verified implementation status still requires test evidence; otherwise ARCHITECTURE is canonical for system boundaries, CONTRACTS for data formats, and IDENTITY for access rules. Report conflicts and amend the relevant document rather than silently choosing a new architecture.
+
+## v0.2 contributor requirements
+
+Read docs/REVIEW_RESOLUTION.md for disposition and implementation gates. DATABASE/RUNTIME/CUSTOMIZATION/SECURITY/EVALS are canonical for their named subsystems. Preserve Feedback files as review history; their suggestions are resolved through current decisions, not competing instructions. No live adapters/keys or pg-boss imports in web, no client-data Server Actions, no arbitrary provider-network calls. Prompt/extension changes require the evaluation and versioning rules. Add dependencies only with the PR's explicit human sign-off. No feature merges before M1's CI/protection requirements; no paid evals in default CI.

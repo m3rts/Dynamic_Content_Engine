@@ -56,3 +56,31 @@ Findings have evidence levels: hypothesis, observational signal, controlled-test
 Includes schema_version, bundle_id, client_id, concept_revision_id, asset_spec_revision_id, locale, dimensions, template/component keys and mapping version, copy slots, image references/checksums, typography, required legal copy, approved claim references, and creative lineage IDs. Assets are local bundle files for manual import; authenticated network transfer is a later option. No keys or session credentials are embedded.
 
 Plugin validates the bundle and shows a preview; imports components, loads available fonts, populates slots, checks overflow and missing assets, then returns bundle ID, file reference and node IDs in a result manifest. Repeated import updates only explicitly selected managed frames or creates an intentional new revision; never overwrite unrelated designs.
+
+## v0.2 contract additions
+
+[DATABASE](DATABASE.md) defines partitioned observations, dataset revisions and trusted dispatch metadata. [RUNTIME](RUNTIME.md) defines exact run/attempt/reservation states, idempotency expiry and timing. [CUSTOMIZATION](CUSTOMIZATION.md) defines immutable pipeline, extension, prompt and rubric packs. These are required when the associated entity is first implemented; not optional untyped metadata.
+
+Additional entities: LinkedIdentity (issuer + subject), PipelineDefinitionRevision, ExtensionPackRevision, PromptPackRevision, RubricRevision, FigmaLibraryRevision, OpportunityRevision, ApprovedClaimRevision, DispatchRecord, BudgetReservation, CostLedgerEntry, EgressEvent, DatasetRevision, ClientPolicyRevision, ExportJob, DeletionJob and RetentionPolicyRevision. Every client-owned entity follows existing scope constraints. Global template definitions contain no client data and publish only through owner review.
+
+Envelope adds pipeline_revision_id, extension_pack_refs, prompt/rubric layer refs, policy_revision_id, data_classes, trace_id, selected_sources (typed untrusted excerpts + source offsets), and reconstruction_bundle_ref. `requested_by`, actor/scope and trace are trusted server values; model text cannot populate them. Data region/system policy separation is explicit. No URL/tools permissions in MVP envelopes. Concept schema adds approved_claim_refs and structured claim slots; evidence without resolvable same-client source is a hypothesis, never an observation.
+
+Approval is one append-only event, not a single reviewer field overwritten on the concept. Fields: approval_type, revision_hash, policy_revision_id, reviewer_id, decision, reason, prior_event_hash, event_hash and timestamp. A revision can have multiple types and reviewers. Revocation appends an event; derived approval status is recomputed. Bundle creation verifies required approvals, claim validity and current access. Missing/invalidated approval returns a typed conflict.
+
+Profiles contain provider/model choices and allowed fallback candidates; client policy separately limits actual egress. Effective fallback is the intersection plus explicit run consent. Output records requested and actual profile/model. Stale profiles, unavailable models or denied data classes fail closed.
+
+### Additional API commands
+
+- `POST /api/v1/clients/:clientId/runs/:runId/cancel`: idempotent cancellation request, no promised charge reversal.
+- `POST /api/v1/clients/:clientId/exports`: step-up + client.export, returns 202 job ID; GET status/download reauthorizes.
+- `DELETE /api/v1/clients/:clientId`: step-up + client.delete, expected revision and explicit confirmation token; 202 deletion job, never silent immediate purge.
+- `POST /api/v1/clients/:clientId/deletion-requests`: authorized scoped subset/subject request, reviewed before execution; allows personal-data handling without deleting an entire brand.
+- `GET /api/v1/clients/:clientId/deletion-requests/:requestId`: restricted status including residual copies/retention, accessible through a minimal tombstone until receipt expiry.
+- `POST /api/v1/clients/:clientId/report-imports/:importId/commit`: approved mapping and dataset revision; conflicts prevent double counting.
+- `POST /api/v1/clients/:clientId/figma-results`: bounded validated manifest matching an authorized issued bundle; arbitrary node IDs do not grant file access.
+
+All changes have scoped idempotency, current authorization and audit; sensitive ones have re-authentication. A deleted client's status lookup uses minimal owner-authorized deletion receipts, not an ordinary RLS bypass. Defaults: list page 50/max 100, request JSON body 1 MB; larger upload formats have SECURITY limits. Error classes distinguish auth, forbidden scope (no existence leakage), validation, conflict/stale revision, rate limit, budget exhausted, provider unavailable and uncertain outcome. Retryability is explicit, never inferred from HTTP status alone.
+
+### Approval/evidence boundaries
+
+Bounded/plain-text output validation applies on UI and bundle export. Human creative preference, model critique and controlled-test evidence remain different records. Synthetic sample findings are labelled and cannot be mixed with real client metrics. Publication remains manual and outside runtime authority.

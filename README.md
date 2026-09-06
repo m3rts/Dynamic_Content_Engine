@@ -2,7 +2,7 @@
 
 A client-agnostic agency workspace for turning business objectives, audience evidence, and brand guidance into creative concepts, editable assets, and evidence-informed next experiments.
 
-**Status: architecture baseline v0.1 — documentation only.** Nothing has been implemented or deployed. Proposed technology choices below are the working baseline for review, not claims about existing software. Updated 6 September 2026.
+**Status: architecture baseline v0.2 — documentation only.** Nothing has been implemented or deployed. This is the owner-authorized revised design baseline; the Tech VP approved v0.2 at ed1ebfc on 6 September 2026, as relayed by the owner. A separate renewed QA/QC/InfoSec approval has not been recorded; implementation is pending. Updated 6 September 2026.
 
 ## Start here
 
@@ -16,6 +16,8 @@ A client-agnostic agency workspace for turning business objectives, audience evi
 8. [Implementation plan and handoffs](docs/PLAN.md)
 9. [Architecture decisions](docs/DECISIONS.md)
 10. [Sources and pricing references](docs/SOURCES.md)
+
+Review changes first in [Review resolution](docs/REVIEW_RESOLUTION.md) and [Changelog](CHANGELOG.md). Detailed specifications: [Database](docs/DATABASE.md), [Runtime and egress](docs/RUNTIME.md), [Customization](docs/CUSTOMIZATION.md), [Creative evaluation](docs/EVALS.md), [Security and retention](docs/SECURITY.md), and [Glossary](docs/GLOSSARY.md). Original reviewer feedback is preserved in [Feedback](Feedback/).
 
 All contributors, including Codex, Claude, and Grok, must read [AGENTS.md](AGENTS.md) and [CONTRIBUTING.md](CONTRIBUTING.md). CodeRabbit review guidance lives in [.coderabbit.yaml](.coderabbit.yaml).
 

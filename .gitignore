@@ -9,3 +9,13 @@ coverage/
 backups/
 *.log
 .DS_Store
+
+# Client data, credentials and local database exports
+*.dump
+*.sql.gz
+*.pem
+*.key
+*.p12
+*.pfx
+.data-*/
+*.db
