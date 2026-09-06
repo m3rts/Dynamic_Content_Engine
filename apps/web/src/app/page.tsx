@@ -1,8 +1,10 @@
-export default function HomePage() {
-  return (
-    <main>
-      <h1>Dynamic Content Engine</h1>
-      <p>M1 foundation web boundary. Authenticated API routes live under /api/v1.</p>
-    </main>
-  );
+import { redirect } from "next/navigation";
+
+import { getServerSession } from "@/lib/session";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const session = await getServerSession();
+  redirect(session ? "/app" : "/login");
 }

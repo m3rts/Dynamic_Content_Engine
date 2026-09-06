@@ -50,7 +50,9 @@ export async function bootstrapDatabase(adminUrl: string): Promise<void> {
 
 export async function prepareFoundationDatabase(adminUrl: string): Promise<void> {
   await bootstrapDatabase(adminUrl);
-  await applyMigrations(migratorDatabaseUrl(adminUrl), { through: "0007_auth_and_identity.sql" });
+  await applyMigrations(migratorDatabaseUrl(adminUrl), {
+    through: "0009_mark_dispatch_delivered.sql",
+  });
 }
 
 export async function prepareQueueDatabase(adminUrl: string): Promise<void> {

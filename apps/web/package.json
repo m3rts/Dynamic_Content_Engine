@@ -13,8 +13,12 @@
   "dependencies": {
     "@dce/contracts": "workspace:*",
     "@dce/db": "workspace:*",
+    "@dce/i18n": "workspace:*",
     "@dce/policy": "workspace:*",
     "@dce/storage": "workspace:*",
+    "@dce/ui": "workspace:*",
+    "@fontsource/noto-sans-thai": "5.2.8",
+    "@fontsource/space-grotesk": "5.2.8",
     "better-auth": "1.7.3",
     "next": "15.5.25",
     "pg": "8.16.3",

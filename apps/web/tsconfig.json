@@ -15,6 +15,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@dce/i18n": ["../../packages/i18n/src/index.ts"],
+      "@dce/ui": ["../../packages/ui/src/index.ts"],
       "@dce/policy": ["../../packages/policy/src/index.ts"],
       "@dce/contracts": ["../../packages/contracts/src/index.ts"],
       "@dce/db": ["../../packages/db/src/index.ts"],
