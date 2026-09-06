@@ -49,7 +49,7 @@ describe(
       process.env.ADMIN_DATABASE_URL = isolatedAdmin;
       process.env.AUTH_DATABASE_URL = roleDatabaseUrl(isolatedAdmin, "dce_auth", "dce_auth");
       process.env.WEB_DATABASE_URL = roleDatabaseUrl(isolatedAdmin, "dce_web", "dce_web");
-      process.env.BETTER_AUTH_SECRET = "integration-test-secret-012345678901";
+      process.env.BETTER_AUTH_SECRET = randomUUID().replace(/-/g, "");
       process.env.BETTER_AUTH_URL = "http://127.0.0.1:3000";
 
       await bootstrapDatabase(isolatedAdmin);
