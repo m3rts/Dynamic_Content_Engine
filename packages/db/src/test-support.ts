@@ -36,7 +36,7 @@ export async function applyRuntimeGrants(adminUrl: string): Promise<void> {
   await client.connect();
   try {
     await client.query(`
-      GRANT USAGE ON SCHEMA app, control, audit TO dce_web, dce_worker_app;
+      GRANT USAGE ON SCHEMA app, control, audit TO dce_web, dce_worker_app, dce_definer;
       GRANT USAGE ON SCHEMA control, boss TO dce_queue;
       GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA app TO dce_web, dce_worker_app;
       GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA audit TO dce_web, dce_worker_app;

@@ -19,6 +19,7 @@ CREATE INDEX dispatch_record_pending_idx
   WHERE state = 'pending';
 
 REVOKE ALL ON TABLE control.dispatch_record FROM PUBLIC;
+GRANT USAGE ON SCHEMA app, control TO dce_definer;
 GRANT SELECT, INSERT, UPDATE ON TABLE control.dispatch_record TO dce_definer;
 GRANT SELECT ON TABLE app.workflow_run TO dce_definer;
 
