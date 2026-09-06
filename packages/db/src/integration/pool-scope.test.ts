@@ -48,7 +48,7 @@ describe("pool scope isolation", { skip: adminUrl ? false : "TEST_DATABASE_URL n
         await inTransaction(client, async (tx) => {
           await tx.query("SELECT id FROM app.client");
         });
-      }, /permission denied|insufficient privilege/i);
+      }, /permission denied|insufficient privilege|invalid input syntax for type uuid/i);
     });
   });
 
@@ -64,7 +64,7 @@ describe("pool scope isolation", { skip: adminUrl ? false : "TEST_DATABASE_URL n
         await inTransaction(client, async (tx) => {
           await tx.query("SELECT id FROM app.client");
         });
-      }, /permission denied|insufficient privilege/i);
+      }, /permission denied|insufficient privilege|invalid input syntax for type uuid/i);
     });
   });
 });

@@ -14,7 +14,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "migrate": "node --import tsx src/migrate.ts",
     "owner:bootstrap": "node --import tsx src/owner-bootstrap-cli.ts",
-    "test:integration": "node --import tsx --test src/integration/*.test.ts",
+    "test:integration": "node --import tsx --test --test-concurrency=1 src/integration/*.test.ts",
     "verify:pgboss": "node --import tsx src/verify-pgboss-privileges.ts"
   },
   "dependencies": {
