@@ -2,7 +2,9 @@
 
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtempSync } from "node:fs";
 import { readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
@@ -22,10 +24,12 @@ function gitleaksCommand() {
   }
 
   try {
-    execFileSync("bash", [join(repoRoot, "scripts/install-gitleaks.sh"), join(repoRoot, ".bin")], {
+    const installDir = mkdtempSync(join(tmpdir(), "dce-gitleaks-"));
+    execFileSync("bash", [join(repoRoot, "scripts/install-gitleaks.sh"), installDir], {
       stdio: "pipe",
+      cwd: installDir,
     });
-    return [join(repoRoot, ".bin/gitleaks")];
+    return [join(installDir, "gitleaks")];
   } catch {
     return null;
   }
