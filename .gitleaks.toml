@@ -36,3 +36,11 @@ paths = [
 ]
 regexTarget = "secret"
 regexes = ['''8e4f73c6-79b6-4500-aa26-55bbf2188fb4''']
+
+# Historical gitleaks-config.test.mjs literals (replaced with runtime assembly).
+[[rules.allowlists]]
+description = "Historical gitleaks regression harness literals"
+condition = "AND"
+paths = ['''scripts/gitleaks-config\.test\.mjs$''']
+regexTarget = "line"
+regexes = ['''8e4f73c6-79b6-4500-aa26-55bbf2188fb4''']

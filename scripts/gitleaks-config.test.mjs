@@ -61,14 +61,20 @@ function runDetect(gitleaksArgs, source) {
   };
 }
 
+function buildSyntheticApiKey() {
+  const chunks = ["8e4f73c6", "79b6", "4500", "aa26", "55bbf2188fb4"];
+  return chunks.join("-");
+}
+
+function writeSyntheticSecretFile(filePath, bindingName) {
+  writeFileSync(filePath, `export const ${bindingName} = "${buildSyntheticApiKey()}";\n`);
+}
+
 function writeIntegrationLeakFixture(rootDir) {
   const integrationDir = join(rootDir, "apps/web/src/integration");
   mkdirSync(integrationDir, { recursive: true });
   const fixturePath = join(integrationDir, "should-flag.test.ts");
-  writeFileSync(
-    fixturePath,
-    'export const leakedApiKey = "8e4f73c6-79b6-4500-aa26-55bbf2188fb4";\n',
-  );
+  writeSyntheticSecretFile(fixturePath, "leakedApiKey");
   return fixturePath;
 }
 
@@ -107,7 +113,7 @@ test("allows the runtime-generated client-context auth secret assignment", () =>
 test("default rules remain active for non-allowlisted files", () => {
   const fixtureRoot = mkdtempSync(join(tmpdir(), "dce-gitleaks-fixture-"));
   const fixturePath = join(fixtureRoot, "leak.ts");
-  writeFileSync(fixturePath, 'export const token = "8e4f73c6-79b6-4500-aa26-55bbf2188fb4";\n');
+  writeSyntheticSecretFile(fixturePath, "token");
 
   const result = runDetect(["--verbose"], fixturePath);
   if (result.skipped) {
@@ -115,5 +121,5 @@ test("default rules remain active for non-allowlisted files", () => {
   }
 
   assert.notEqual(result.status, 0, result.output);
-  assert.match(result.output, /8e4f73c6-79b6-4500-aa26-55bbf2188fb4|generic-api-key|leaks found/i);
+  assert.match(result.output, /generic-api-key|leaks found/i);
 });
