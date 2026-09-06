@@ -2,7 +2,7 @@
 
 A client-agnostic agency workspace for turning business objectives, audience evidence, and brand guidance into creative concepts, editable assets, and evidence-informed next experiments.
 
-**Status: M1 foundation in progress — database and identity boundary landed; worker/UI skeleton still pending.** Architecture baseline v0.2 was approved at ed1ebfc on 6 September 2026. Updated 6 September 2026.
+**Status: M1 task 3 complete — identity boundary merged; task 4 (tokens/i18n + worker skeleton) is next.** Architecture baseline v0.2 was approved at ed1ebfc on 6 September 2026. Updated 6 September 2026.
 
 ## Start here
 
