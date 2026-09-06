@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@dce/db": ["../../packages/db/src/index.ts"],
+      "@dce/db/test-support": ["../../packages/db/src/test-support.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/integration/**"]
+}

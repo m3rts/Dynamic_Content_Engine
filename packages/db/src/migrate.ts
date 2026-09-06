@@ -1,7 +1,7 @@
 import "../../../scripts/load-root-env.mjs";
 import process from "node:process";
 
-import { applyMigrations } from "./index.js";
+import { applyMigrations, BOSS_QUEUE_GRANTS_MIGRATION } from "./index.js";
 
 const connectionString = process.env.MIGRATOR_DATABASE_URL ?? process.env.DATABASE_URL;
 
@@ -10,7 +10,8 @@ if (!connectionString) {
   process.exitCode = 1;
 } else {
   const applied = await applyMigrations(connectionString, {
-    through: "0007_auth_and_identity.sql",
+    through: "0009_mark_dispatch_delivered.sql",
+    exclude: [BOSS_QUEUE_GRANTS_MIGRATION],
   });
   if (applied.length === 0) {
     console.log("No pending migrations.");

@@ -1,9 +1,12 @@
 import "../../scripts/load-root-env.mjs";
 import type { NextConfig } from "next";
 
+import { authenticatedRouteHeaderRule } from "./cache-header-rules";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  transpilePackages: ["@dce/i18n", "@dce/ui"],
   experimental: {
     // ARCHITECTURE v0.2: keep Cache Components disabled at foundation.
     staleTimes: {
@@ -12,6 +15,7 @@ const nextConfig: NextConfig = {
     },
   },
   headers: async () => [
+    authenticatedRouteHeaderRule,
     {
       source: "/api/v1/:path*",
       headers: [

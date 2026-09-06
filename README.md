@@ -2,7 +2,7 @@
 
 A client-agnostic agency workspace for turning business objectives, audience evidence, and brand guidance into creative concepts, editable assets, and evidence-informed next experiments.
 
-**Status: M1 task 3 complete — identity boundary merged; task 4 (tokens/i18n + worker skeleton) is next.** Architecture baseline v0.2 was approved at ed1ebfc on 6 September 2026. Updated 6 September 2026.
+**Status: M1 task 4 in progress — tokens/i18n, login shell, and worker skeleton on `feat/m1-task4`.** Architecture baseline v0.2 was approved at ed1ebfc on 6 September 2026. Updated 6 September 2026.
 
 ## Start here
 
@@ -40,21 +40,24 @@ corepack enable
 pnpm install --frozen-lockfile
 cp .env.example .env   # set BETTER_AUTH_SECRET (openssl rand -base64 32)
 docker compose -f infra/compose.yaml up -d postgres
-pnpm run db:migrate    # loads root .env automatically
+pnpm run db:migrate       # app/control/auth migrations (dce_migrator; skips boss grants)
+pnpm run db:setup-queue   # pg-boss schema + queue grants (dce_boss_migrator)
 pnpm run owner:bootstrap
 pnpm run dev           # http://127.0.0.1:3000 — loads root .env automatically
+pnpm run worker:dev    # fixture dispatcher (requires QUEUE_DATABASE_URL, DCE_FIXTURE_MODE=strict)
 pnpm run check
 pnpm run test:integration
 ```
 
-Implemented checks: Prettier, ESLint, TypeScript project references, Vitest unit tests, Next.js production build, dependency-boundary scan, internal documentation link validation, PostgreSQL integration tests, pg-boss privilege verification, and secret scanning in CI. Browser isolation tests are planned once authenticated pages exist.
+Implemented checks: Prettier, ESLint, TypeScript project references, Vitest unit tests, Next.js production build, dependency-boundary scan, internal documentation link validation, PostgreSQL integration tests, pg-boss privilege verification, browser isolation header test for `/app`, and secret scanning in CI.
 
-## Local endpoints (M1 task 3)
+## Local endpoints (M1 task 4)
 
-| Endpoint                                                 | Purpose                             |
-| -------------------------------------------------------- | ----------------------------------- |
-| `http://127.0.0.1:3000`                                  | Minimal web shell                   |
-| `http://127.0.0.1:3000/api/auth/*`                       | Better Auth session routes          |
-| `http://127.0.0.1:3000/api/v1/clients/:clientId/context` | Scoped API boundary (`client.read`) |
+| Endpoint                                                 | Purpose                                      |
+| -------------------------------------------------------- | -------------------------------------------- |
+| `http://127.0.0.1:3000/login`                            | Email/password sign-in                       |
+| `http://127.0.0.1:3000/app`                              | Authenticated foundation shell (fixture mode) |
+| `http://127.0.0.1:3000/api/auth/*`                       | Better Auth session routes                   |
+| `http://127.0.0.1:3000/api/v1/clients/:clientId/context` | Scoped API boundary (`client.read`)          |
 
 Owner bootstrap is CLI-only (`pnpm run owner:bootstrap`); it has no HTTP endpoint.

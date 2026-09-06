@@ -41,12 +41,24 @@ importers:
       '@dce/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@dce/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@dce/policy':
         specifier: workspace:*
         version: link:../../packages/policy
       '@dce/storage':
         specifier: workspace:*
         version: link:../../packages/storage
+      '@dce/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@fontsource/noto-sans-thai':
+        specifier: 5.2.8
+        version: 5.2.8
+      '@fontsource/space-grotesk':
+        specifier: 5.2.8
+        version: 5.2.8
       better-auth:
         specifier: 1.7.3
         version: 1.7.3(next@15.5.25(@types/node@22.13.10)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.16.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@3.2.6(@types/node@22.13.10)(tsx@4.20.5))
@@ -85,6 +97,25 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
 
+  apps/worker:
+    dependencies:
+      '@dce/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      pg:
+        specifier: 8.16.3
+        version: 8.16.3
+    devDependencies:
+      '@types/pg':
+        specifier: 8.15.5
+        version: 8.15.5
+      tsx:
+        specifier: 4.20.5
+        version: 4.20.5
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   packages/contracts:
     dependencies:
       zod:
@@ -116,11 +147,32 @@ importers:
         specifier: workspace:*
         version: link:../contracts
 
+  packages/i18n: {}
+
   packages/observability: {}
 
   packages/policy: {}
 
   packages/storage: {}
+
+  packages/ui:
+    dependencies:
+      '@dce/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      react:
+        specifier: ^19.0.0
+        version: 19.2.8
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.7
+        version: 19.2.7
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
 
 packages:
 
@@ -409,6 +461,12 @@ packages:
   '@eslint/plugin-kit@0.7.3':
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@fontsource/noto-sans-thai@5.2.8':
+    resolution: {integrity: sha512-HUQAxOzclod9PXQx4uMoGRAsor+64snW91QuBg39jT9lbsp7jJx1i3jAtHPJ7mQxHEHnhRjNp54fb8GqPPC6zg==}
+
+  '@fontsource/space-grotesk@5.2.8':
+    resolution: {integrity: sha512-8rlIzpX+lo36y0g77OlwjeBj2DPo9XOwrzqKRLHYZcWcsj73SlkVI6UdXxDCZGLO7oQti1q9QPXzMBYbzSz60w==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -1835,6 +1893,10 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       levn: 0.4.1
+
+  '@fontsource/noto-sans-thai@5.2.8': {}
+
+  '@fontsource/space-grotesk@5.2.8': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

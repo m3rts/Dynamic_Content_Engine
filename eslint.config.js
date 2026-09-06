@@ -14,13 +14,14 @@ export default tseslint.config(
       "eslint.config.js",
       "packages/db/src/integration/**",
       "apps/web/src/integration/**",
+      "apps/worker/src/integration/**",
       "pnpm-lock.yaml",
     ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
-    files: ["packages/**/*.ts", "vitest.config.ts"],
+    files: ["packages/**/*.ts", "packages/**/*.tsx", "vitest.config.ts"],
     languageOptions: {
       parserOptions: {
         project: ["./tsconfig.eslint.json"],
@@ -33,6 +34,15 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         project: ["./apps/web/tsconfig.json"],
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    files: ["apps/worker/**/*.ts"],
+    languageOptions: {
+      parserOptions: {
+        project: ["./apps/worker/tsconfig.json"],
         tsconfigRootDir: import.meta.dirname,
       },
     },
