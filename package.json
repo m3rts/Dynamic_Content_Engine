@@ -1,0 +1,28 @@
+{
+  "name": "dynamic-content-engine",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "lint": "eslint .",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "check:links": "node scripts/check-doc-links.mjs",
+    "check": "pnpm run format && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run check:boundaries && pnpm run check:links"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.13.10",
+    "eslint": "10.10.0",
+    "prettier": "3.5.3",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.69.0",
+    "vitest": "3.0.9"
+  }
+}

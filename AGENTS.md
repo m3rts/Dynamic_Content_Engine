@@ -4,7 +4,7 @@ Read README.md, docs/ARCHITECTURE.md, docs/DECISIONS.md, and the relevant domain
 
 ## Working agreement
 
-- This repository currently contains planning documents only. Do not describe planned features as implemented.
+- This repository contains architecture documentation and an M1 foundation workspace. Do not describe planned features as implemented.
 - Keep development local until the owner authorizes hosting. Do not provision, deploy, create tunnels, or add automatic deployment workflows.
 - Use the documented TypeScript baseline. Architectural changes require a decision entry with rationale, consequences, and migration impact. Do not independently introduce Rust services, Redis, vector databases, or microservices.
 - Use a branch per bounded task and isolated checkout for simultaneous agents. Coordinate ownership of contracts, migrations, and dependency files before overlapping changes.
