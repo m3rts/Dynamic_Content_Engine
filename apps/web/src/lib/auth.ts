@@ -64,4 +64,13 @@ export const auth: AuthInstance = new Proxy({} as AuthInstance, {
   },
 });
 
+export async function closeAuthPool(): Promise<void> {
+  if (authPool) {
+    await authPool.end();
+    authPool = undefined;
+  }
+
+  authInstance = undefined;
+}
+
 export type AuthSession = AuthInstance["$Infer"]["Session"];

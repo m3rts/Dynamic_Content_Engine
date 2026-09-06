@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1 --port 3000",
-    "build": "next build",
-    "start": "next start --hostname 127.0.0.1 --port 3000",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "dev": "node --import ../../scripts/load-root-env.mjs node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3000",
+    "build": "node --import ../../scripts/load-root-env.mjs node_modules/next/dist/bin/next build",
+    "start": "node --import ../../scripts/load-root-env.mjs node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3000",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:integration": "node --import ../../scripts/load-root-env.mjs --import tsx --test --test-concurrency=1 src/integration/*.test.ts"
   },
   "dependencies": {
     "@dce/contracts": "workspace:*",
@@ -26,6 +27,7 @@
     "@types/pg": "8.15.5",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
+    "tsx": "4.20.5",
     "typescript": "5.9.3"
   }
 }

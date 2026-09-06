@@ -1,3 +1,4 @@
+import "../../scripts/load-root-env.mjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {

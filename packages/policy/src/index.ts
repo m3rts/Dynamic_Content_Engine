@@ -23,6 +23,13 @@ export type PolicyDecision =
   | { allowed: true }
   | { allowed: false; reason: "missing_capability" | "unknown_capability" | "disabled_membership" };
 
+/** Capabilities that require an explicit named grant beyond base role membership. */
+export const namedGrantCapabilities = ["review.claims", "review.production"] as const;
+
+export type NamedGrantCapability = (typeof namedGrantCapabilities)[number];
+
+const namedGrantCapabilitySet = new Set<string>(namedGrantCapabilities);
+
 const knownCapabilities = new Set<Capability>([
   "client.read",
   "brief.write",
@@ -43,7 +50,7 @@ const knownCapabilities = new Set<Capability>([
   "audit.read",
 ]);
 
-/** Capability grants by membership role (IDENTITY v0.2 M1 table). */
+/** Base capability grants by membership role (IDENTITY v0.2 M1 table). */
 export const roleCapabilities: Readonly<Record<MembershipRole, readonly Capability[]>> = {
   owner: [
     "client.read",
@@ -74,18 +81,23 @@ export const roleCapabilities: Readonly<Record<MembershipRole, readonly Capabili
     "asset.export",
     "audit.read",
   ],
-  reviewer: [
-    "client.read",
-    "review.creative",
-    "review.claims",
-    "review.production",
-    "asset.export",
-    "audit.read",
-  ],
+  reviewer: ["client.read", "review.creative", "asset.export", "audit.read"],
 };
 
 export function capabilitiesForRole(role: MembershipRole): readonly Capability[] {
   return roleCapabilities[role];
+}
+
+export function isNamedGrantCapability(capability: Capability): capability is NamedGrantCapability {
+  return namedGrantCapabilitySet.has(capability);
+}
+
+export function resolveMembershipCapabilities(
+  role: MembershipRole,
+  namedGrants: readonly Capability[] = [],
+): readonly Capability[] {
+  const allowedNamed = namedGrants.filter(isNamedGrantCapability);
+  return [...new Set<Capability>([...capabilitiesForRole(role), ...allowedNamed])];
 }
 
 /** Pure capability evaluation; authorization context is supplied by callers. */
@@ -107,11 +119,14 @@ export function evaluateCapability(
 export function evaluateMembershipCapability(
   role: MembershipRole,
   required: Capability,
-  options: { membershipStatus?: "active" | "disabled" } = {},
+  options: {
+    membershipStatus?: "active" | "disabled";
+    namedGrants?: readonly Capability[];
+  } = {},
 ): PolicyDecision {
   if (options.membershipStatus === "disabled") {
     return { allowed: false, reason: "disabled_membership" };
   }
 
-  return evaluateCapability(capabilitiesForRole(role), required);
+  return evaluateCapability(resolveMembershipCapabilities(role, options.namedGrants), required);
 }

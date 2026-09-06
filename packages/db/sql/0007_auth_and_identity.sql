@@ -77,11 +77,37 @@ CREATE TABLE app.system_bootstrap (
   completed_at timestamptz NOT NULL DEFAULT now()
 );
 
-REVOKE ALL ON TABLE app.linked_identity FROM PUBLIC;
-REVOKE ALL ON TABLE app.system_bootstrap FROM PUBLIC;
+REVOKE ALL ON TABLE app.linked_identity FROM PUBLIC, dce_web, dce_worker_app;
+REVOKE ALL ON TABLE app.system_bootstrap FROM PUBLIC, dce_web, dce_worker_app;
 GRANT SELECT ON TABLE app.linked_identity TO dce_web, dce_worker_app;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE app.linked_identity TO dce_migrator;
-GRANT SELECT, INSERT ON TABLE app.system_bootstrap TO dce_migrator;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE app.system_bootstrap TO dce_migrator;
+
+CREATE TABLE app.membership_capability_grant (
+  agency_id uuid NOT NULL,
+  client_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  capability text NOT NULL CHECK (capability IN ('review.claims', 'review.production')),
+  granted_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (agency_id, client_id, user_id, capability),
+  FOREIGN KEY (agency_id, client_id, user_id)
+    REFERENCES app.client_membership (agency_id, client_id, user_id) ON DELETE CASCADE
+);
+
+CREATE INDEX membership_capability_grant_user_idx
+  ON app.membership_capability_grant (user_id, client_id);
+
+REVOKE ALL ON TABLE app.membership_capability_grant FROM PUBLIC, dce_web, dce_worker_app;
+GRANT SELECT ON TABLE app.membership_capability_grant TO dce_web, dce_worker_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE app.membership_capability_grant TO dce_migrator;
+
+ALTER TABLE app.membership_capability_grant ENABLE ROW LEVEL SECURITY;
+ALTER TABLE app.membership_capability_grant FORCE ROW LEVEL SECURITY;
+
+CREATE POLICY membership_capability_grant_actor_read ON app.membership_capability_grant
+  FOR SELECT
+  TO dce_web, dce_worker_app
+  USING (user_id = current_setting('dce.actor_id', true)::uuid);
 
 CREATE OR REPLACE FUNCTION app.set_actor_id(p_actor_id uuid)
 RETURNS void

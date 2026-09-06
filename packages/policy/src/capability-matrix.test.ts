@@ -47,8 +47,8 @@ const expectedMatrix: Record<MembershipRole, Partial<Record<Capability, boolean>
   reviewer: {
     "client.read": true,
     "review.creative": true,
-    "review.claims": true,
-    "review.production": true,
+    "review.claims": false,
+    "review.production": false,
     "asset.export": true,
     "audit.read": true,
     "run.create": false,

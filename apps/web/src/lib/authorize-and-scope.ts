@@ -1,5 +1,5 @@
 import type { Capability } from "@dce/policy";
-import { capabilitiesForRole, evaluateMembershipCapability } from "@dce/policy";
+import { evaluateMembershipCapability, resolveMembershipCapabilities } from "@dce/policy";
 import type pg from "pg";
 
 import type { AuthSession } from "./auth";
@@ -51,6 +51,24 @@ export async function resolveActorId(authUserId: string): Promise<string> {
   return actorId;
 }
 
+export async function loadNamedGrants(
+  client: pg.PoolClient,
+  actorId: string,
+  clientId: string,
+): Promise<Capability[]> {
+  const result = await client.query<{ capability: Capability }>(
+    `
+    SELECT capability
+    FROM app.membership_capability_grant
+    WHERE user_id = $1
+      AND client_id = $2
+  `,
+    [actorId, clientId],
+  );
+
+  return result.rows.map((row) => row.capability);
+}
+
 export async function loadMembership(
   client: pg.PoolClient,
   actorId: string,
@@ -91,8 +109,10 @@ export async function authorizeAndScope(
       throw new AuthorizationError("Client membership required", 403);
     }
 
+    const namedGrants = await loadNamedGrants(client, actorId, clientId);
     const decision = evaluateMembershipCapability(membership.role, capability, {
       membershipStatus: membership.status,
+      namedGrants,
     });
 
     if (!decision.allowed) {
@@ -106,7 +126,7 @@ export async function authorizeAndScope(
       agencyId: membership.agency_id,
       clientId: membership.client_id,
       membershipRole: membership.role,
-      capabilities: capabilitiesForRole(membership.role),
+      capabilities: resolveMembershipCapabilities(membership.role, namedGrants),
     };
   } catch (error) {
     await client.query("ROLLBACK");

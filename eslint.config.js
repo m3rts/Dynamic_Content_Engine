@@ -13,6 +13,7 @@ export default tseslint.config(
       "scripts/**",
       "eslint.config.js",
       "packages/db/src/integration/**",
+      "apps/web/src/integration/**",
       "pnpm-lock.yaml",
     ],
   },

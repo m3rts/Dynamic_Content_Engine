@@ -40,9 +40,9 @@ corepack enable
 pnpm install --frozen-lockfile
 cp .env.example .env   # set BETTER_AUTH_SECRET (openssl rand -base64 32)
 docker compose -f infra/compose.yaml up -d postgres
-pnpm run db:migrate
+pnpm run db:migrate    # loads root .env automatically
 pnpm run owner:bootstrap
-pnpm run dev           # http://127.0.0.1:3000
+pnpm run dev           # http://127.0.0.1:3000 — loads root .env automatically
 pnpm run check
 pnpm run test:integration
 ```

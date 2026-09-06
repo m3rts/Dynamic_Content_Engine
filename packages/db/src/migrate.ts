@@ -1,3 +1,4 @@
+import "../../../scripts/load-root-env.mjs";
 import process from "node:process";
 
 import { applyMigrations } from "./index.js";

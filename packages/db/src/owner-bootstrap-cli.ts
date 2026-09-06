@@ -1,3 +1,4 @@
+import "../../../scripts/load-root-env.mjs";
 import { createInterface } from "node:readline/promises";
 import process from "node:process";
 

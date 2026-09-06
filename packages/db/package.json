@@ -7,13 +7,17 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./test-support": {
+      "types": "./dist/test-support.d.ts",
+      "default": "./dist/test-support.js"
     }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "migrate": "node --import tsx src/migrate.ts",
-    "owner:bootstrap": "node --import tsx src/owner-bootstrap-cli.ts",
+    "migrate": "node --import ../../../scripts/load-root-env.mjs --import tsx src/migrate.ts",
+    "owner:bootstrap": "node --import ../../../scripts/load-root-env.mjs --import tsx src/owner-bootstrap-cli.ts",
     "test:integration": "node --import tsx --test --test-concurrency=1 src/integration/*.test.ts",
     "verify:pgboss": "node --import tsx src/verify-pgboss-privileges.ts"
   },

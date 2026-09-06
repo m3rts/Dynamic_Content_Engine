@@ -73,3 +73,5 @@ export function roleDatabaseUrl(baseUrl: string, role: string, password: string)
   url.password = password;
   return url.toString();
 }
+
+export { bootstrapOwner, type BootstrapInput } from "./owner-bootstrap.js";
