@@ -21,11 +21,20 @@ export type TestFixture = {
 };
 
 export function migratorDatabaseUrl(baseUrl: string): string {
-  if (process.env.MIGRATOR_DATABASE_URL) {
-    return process.env.MIGRATOR_DATABASE_URL;
+  const target = new URL(baseUrl);
+  const source = process.env.MIGRATOR_DATABASE_URL
+    ? new URL(process.env.MIGRATOR_DATABASE_URL)
+    : target;
+
+  const migratorUrl = new URL(source.toString());
+  migratorUrl.pathname = target.pathname;
+
+  if (!process.env.MIGRATOR_DATABASE_URL) {
+    migratorUrl.username = "dce_migrator";
+    migratorUrl.password = "dce_migrator";
   }
 
-  return roleDatabaseUrl(baseUrl, "dce_migrator", "dce_migrator");
+  return migratorUrl.toString();
 }
 
 export async function bootstrapDatabase(adminUrl: string): Promise<void> {

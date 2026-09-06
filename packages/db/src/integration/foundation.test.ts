@@ -44,6 +44,19 @@ describe("database integration", { skip: adminUrl ? false : "TEST_DATABASE_URL n
     await bootstrapDatabase(isolatedAdmin);
 
     const migratorUrl = migratorDatabaseUrl(isolatedAdmin);
+
+    await withClient(migratorUrl, async (client) => {
+      const connected = await client.query<{ current_database: string }>(
+        "SELECT current_database()",
+      );
+      assert.equal(connected.rows[0]?.current_database, isolatedDbName);
+
+      await assert.rejects(
+        () => client.query("SELECT 1 FROM app.schema_migration LIMIT 1"),
+        /relation .* does not exist|permission denied/i,
+      );
+    });
+
     const { execFile } = await import("node:child_process");
     const { promisify } = await import("node:util");
     const execFileAsync = promisify(execFile);
