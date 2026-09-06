@@ -1,0 +1,16 @@
+# Shared architecture review guidance; installed GitHub app settings remain separate.
+language: en-US
+reviews:
+  path_instructions:
+    - path: "**/*"
+      instructions: |
+        Review against AGENTS.md and docs/ARCHITECTURE.md, docs/CONTRACTS.md,
+        docs/IDENTITY.md and docs/DECISIONS.md. Flag architectural drift,
+        unscoped client access, secret exposure, accidental live API calls,
+        unsafe job retries, missing contract migrations and unsupported
+        performance claims. Distinguish proposed documentation from implemented
+        features. Require meaningful tests for access boundaries and job effects.
+    - path: "apps/web/**"
+      instructions: |
+        Check server-side authorization, accessible interactions, offline behavior,
+        and docs/DESIGN.md. Agency UI branding must not override client asset branding.
