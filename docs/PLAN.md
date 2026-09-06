@@ -1,6 +1,6 @@
 # Implementation plan v0.2
 
-Status: Tech VP approved the architecture at ed1ebfc on 6 September 2026, as relayed by the owner; implementation pending. Owner-authorized feedback processing is not a claim of completed controls. No app, live integrations or hosted service exists. [REVIEW_RESOLUTION](REVIEW_RESOLUTION.md) maps every review section to a decision/gate.
+Status: Tech VP approved the architecture at ed1ebfc on 6 September 2026, as relayed by the owner; M1 foundation work has started. Owner-authorized feedback processing is not a claim of completed controls. No app runtime, live integrations or hosted service exists. [REVIEW_RESOLUTION](REVIEW_RESOLUTION.md) maps every review section to a decision/gate.
 
 Accountable lead for this documentation revision: Codex. Product owner/merge authority: m3rts. Implementation ownership below is by role; an actual contributor must claim the role before a task starts. Tech VP and QA/QC/InfoSec are review roles, not automatically dispatched agents. Nobody should start overlapping work based on a role label alone.
 
@@ -22,7 +22,7 @@ M1-F can run independently during foundation; no existing agent is assigned auto
 
 ## M1 task order
 
-1. Foundation lead lands CI and the merge-protection setup first, alongside the minimal pinned workspace needed to execute meaningful checks. Record exact stable dependency versions/compatibility, package manager/runtime pins and dependency approvals. Do not add application features ahead of this gate.
+1. Foundation lead lands CI and the merge-protection setup first, alongside the minimal pinned workspace needed to execute meaningful checks. Record exact stable dependency versions/compatibility, package manager/runtime pins and dependency approvals. Do not add application features ahead of this gate. **Done on `feat/m1-foundation`:** pinned pnpm/TypeScript workspace (`packages/contracts`, `packages/domain`, `packages/policy`, `packages/observability`), deterministic CI workflow (`.github/workflows/ci.yml`), local `pnpm run check` evidence. **Verified 6 September 2026:** repository is public; `main` requires the `deterministic-checks` status before merge.
 2. Data lead defines scoped schema/grants and control-function contracts; one person owns migration ordering. Prove queue runtime privilege requirements before accepting role grants.
 3. Identity lead wires bootstrap/session/capabilities to a single API boundary; shared tests cover pool/caching and denied storage access.
 4. Interface lead applies design tokens, translation keys and local fonts; worker lead adds fixture-only dispatcher skeleton with no provider keys.
@@ -32,7 +32,7 @@ M1-F can run independently during foundation; no existing agent is assigned auto
 
 Before any feature merge to main: required format/lint/typecheck/unit tests, relevant PostgreSQL integration tests, dependency boundaries, secret scan and production build. Add browser isolation test as soon as the first authenticated page exists; thereafter required. Pin CI actions by full commit SHA; restrict workflow permissions to read by default; fork PRs get no secrets. SBOM/license/dependency scan accompanies build; unresolved critical exploitable dependency findings block release. Package additions require explicit human approval recorded in the PR; routine updates within the agreed stack still require normal review/checks. CodeRabbit is advisory and cannot approve a failed deterministic gate.
 
-If account plan cannot enforce branch protection, owner must document that platform limitation and use a manual no-merge-until-checks procedure; no claim of protected main. CI/branch settings are not activated by this document.
+If account plan cannot enforce branch protection, owner must document that platform limitation and use a manual no-merge-until-checks procedure; no claim of protected main. CI/branch settings are not activated by this document. **Verified 6 September 2026:** after the owner made `m3rts/Dynamic_Content_Engine` public, branch protection on `main` was configured to require the `deterministic-checks` status with strict up-to-date enforcement. GitHub Advanced Security dependency review remains unavailable without GHAS; CI uses `pnpm audit --audit-level=high` instead.
 
 ## Pilot scope and effort
 

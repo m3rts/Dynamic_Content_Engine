@@ -2,7 +2,7 @@
 
 A client-agnostic agency workspace for turning business objectives, audience evidence, and brand guidance into creative concepts, editable assets, and evidence-informed next experiments.
 
-**Status: architecture baseline v0.2 — documentation only.** Nothing has been implemented or deployed. This is the owner-authorized revised design baseline; the Tech VP approved v0.2 at ed1ebfc on 6 September 2026, as relayed by the owner. A separate renewed QA/QC/InfoSec approval has not been recorded; implementation is pending. Updated 6 September 2026.
+**Status: M1 foundation in progress — pinned workspace and CI landed; application runtime not yet implemented.** Architecture baseline v0.2 was approved at ed1ebfc on 6 September 2026. Updated 6 September 2026.
 
 ## Start here
 
@@ -31,4 +31,16 @@ All contributors, including Codex, Claude, and Grok, must read [AGENTS.md](AGENT
 - Thailand supermarket is the first pilot, not a restriction embedded in the domain model.
 - Impressions, clicks, and engagement support response learning; they do not establish sales impact.
 
-There are no runnable setup commands yet. The future command contract is documented in OPERATIONS; do not assume those scripts exist.
+There are no runnable application commands yet. The foundation workspace supports deterministic checks only.
+
+## Foundation setup (M1)
+
+Requires Node.js 22.12+ and pnpm 9.15.9 (see `.nvmrc` and `packageManager` in `package.json`).
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run check
+```
+
+Implemented checks: Prettier, ESLint, TypeScript project references, Vitest unit tests, dependency-boundary scan, internal documentation link validation, and secret scanning in CI. PostgreSQL integration tests, production build, and browser isolation tests are planned for later M1 tasks once the database and web app exist.
