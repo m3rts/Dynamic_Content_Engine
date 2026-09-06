@@ -96,6 +96,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.agency (id, name) VALUES
         ($1, 'Agency A'),
         ($2, 'Agency B')
+      ON CONFLICT (id) DO NOTHING
     `,
       [fixture.agencyA, fixture.agencyB],
     );
@@ -104,6 +105,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.client (id, agency_id, name) VALUES
         ($1, $3, 'Client A'),
         ($2, $4, 'Client B')
+      ON CONFLICT (id) DO NOTHING
     `,
       [fixture.clientA, fixture.clientB, fixture.agencyA, fixture.agencyB],
     );
@@ -112,6 +114,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.app_user (id, agency_id, display_name) VALUES
         ($1, $3, 'User A'),
         ($2, $4, 'User B')
+      ON CONFLICT (id) DO NOTHING
     `,
       [fixture.userA, fixture.userB, fixture.agencyA, fixture.agencyB],
     );
@@ -120,6 +123,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.client_membership (agency_id, client_id, user_id, role) VALUES
         ($1, $3, $5, 'operator'),
         ($2, $4, $6, 'operator')
+      ON CONFLICT (agency_id, client_id, user_id) DO NOTHING
     `,
       [
         fixture.agencyA,
@@ -135,6 +139,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.workflow_run (id, agency_id, client_id, state, input_hash, created_by) VALUES
         ($1, $3, $5, 'queued', 'hash-a', $7),
         ($2, $4, $6, 'queued', 'hash-b', $8)
+      ON CONFLICT (id) DO NOTHING
     `,
       [
         fixture.runA,

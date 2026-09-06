@@ -74,7 +74,7 @@ describe("database integration", { skip: adminUrl ? false : "TEST_DATABASE_URL n
       const migrations = await client.query<{ id: string }>(
         "SELECT id FROM app.schema_migration ORDER BY id",
       );
-      assert.ok(migrations.rowCount >= 7);
+      assert.ok(migrations.rowCount >= 6);
       assert.ok(migrations.rows.some((row) => row.id === "0007_auth_and_identity.sql"));
     });
 

@@ -5,7 +5,6 @@ import { before, describe, it } from "node:test";
 import { roleDatabaseUrl } from "../index.js";
 import {
   inTransaction,
-  prepareFoundationDatabase,
   seedTwoClientFixture,
   setScope,
   withClient,
@@ -22,7 +21,6 @@ describe("pool scope isolation", { skip: adminUrl ? false : "TEST_DATABASE_URL n
       return;
     }
 
-    await prepareFoundationDatabase(adminUrl);
     fixture = await seedTwoClientFixture(adminUrl);
   });
 
