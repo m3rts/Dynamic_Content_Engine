@@ -46,11 +46,24 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
+      - name: Production build
+        run: pnpm run build
+        env:
+          BETTER_AUTH_SECRET: ci-build-placeholder-secret-0123456789012345
+          BETTER_AUTH_URL: http://127.0.0.1:3000
+          AUTH_DATABASE_URL: postgresql://dce_auth:dce_auth@localhost:5432/dce
+          WEB_DATABASE_URL: postgresql://dce_web:dce_web@localhost:5432/dce
+
       - name: Unit tests
         run: pnpm run test:unit
 
+      - name: Install gitleaks
+        run: sudo bash scripts/install-gitleaks.sh
+
       - name: Boundary checker tests
         run: pnpm run test:boundaries
+        env:
+          GITLEAKS_REQUIRED: "1"
 
       - name: Dependency boundaries
         run: pnpm run check:boundaries
@@ -58,24 +71,22 @@ jobs:
       - name: Documentation links
         run: pnpm run check:links
 
-      - name: Install gitleaks
-        run: sudo bash scripts/install-gitleaks.sh
-
       - name: Secret scan
         shell: bash
         run: |
           set -euo pipefail
+          CONFIG_ARGS=(--config .gitleaks.toml)
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE="${{ github.event.pull_request.base.sha }}"
             HEAD="${{ github.event.pull_request.head.sha }}"
             echo "Scanning PR commit range ${BASE}..${HEAD}"
-            gitleaks detect --source . --redact --verbose --log-opts="${BASE}..${HEAD}"
+            gitleaks detect --source . --redact --verbose "${CONFIG_ARGS[@]}" --log-opts="${BASE}..${HEAD}"
           elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
             echo "Scanning push commit range ${{ github.event.before }}..${{ github.sha }}"
-            gitleaks detect --source . --redact --verbose --log-opts="${{ github.event.before }}..${{ github.sha }}"
+            gitleaks detect --source . --redact --verbose "${CONFIG_ARGS[@]}" --log-opts="${{ github.event.before }}..${{ github.sha }}"
           else
             echo "Scanning full repository history"
-            gitleaks detect --source . --redact --verbose
+            gitleaks detect --source . --redact --verbose "${CONFIG_ARGS[@]}"
           fi
 
       - name: Dependency audit

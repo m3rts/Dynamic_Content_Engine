@@ -5,6 +5,8 @@
     { "path": "packages/domain" },
     { "path": "packages/policy" },
     { "path": "packages/observability" },
-    { "path": "packages/db" }
+    { "path": "packages/db" },
+    { "path": "packages/storage" },
+    { "path": "apps/web" }
   ]
 }

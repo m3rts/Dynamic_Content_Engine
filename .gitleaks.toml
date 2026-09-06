@@ -1,0 +1,46 @@
+title = "Dynamic Content Engine gitleaks config"
+
+[extend]
+useDefault = true
+
+# Allow only the runtime-generated auth secret assignment in the one integration test.
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Runtime-generated BETTER_AUTH_SECRET in client-context integration test"
+condition = "AND"
+paths = ['''apps/web/src/integration/client-context\.test\.ts$''']
+regexTarget = "line"
+regexes = [
+  '''process\.env\.BETTER_AUTH_SECRET\s*=\s*randomUUID\(\)\.replace\(/\^-/g,\s*""\);''',
+]
+
+# Historical PR commit used a fixed synthetic placeholder on the same line; keep that
+# specific exception rather than excluding the whole integration directory.
+[[rules.allowlists]]
+description = "Retired synthetic BETTER_AUTH_SECRET literal in client-context integration test"
+condition = "AND"
+paths = ['''apps/web/src/integration/client-context\.test\.ts$''']
+regexTarget = "line"
+regexes = [
+  '''process\.env\.BETTER_AUTH_SECRET\s*=\s*"integration-test-secret-012345678901";''',
+]
+
+# Ephemeral gitleaks regression fixture (generated at test runtime; one commit lingered in PR history).
+[[rules.allowlists]]
+description = "Removed gitleaks regression fixture secret"
+condition = "AND"
+paths = [
+  '''scripts/fixtures/gitleaks-violations/apps/web/src/integration/should-flag\.test\.ts$''',
+]
+regexTarget = "secret"
+regexes = ['''8e4f73c6-79b6-4500-aa26-55bbf2188fb4''']
+
+# Historical gitleaks-config.test.mjs literals (replaced with runtime assembly).
+[[rules.allowlists]]
+description = "Historical gitleaks regression harness literals"
+condition = "AND"
+paths = ['''scripts/gitleaks-config\.test\.mjs$''']
+regexTarget = "line"
+regexes = ['''8e4f73c6-79b6-4500-aa26-55bbf2188fb4''']

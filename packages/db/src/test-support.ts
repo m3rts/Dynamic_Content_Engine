@@ -50,13 +50,13 @@ export async function bootstrapDatabase(adminUrl: string): Promise<void> {
 
 export async function prepareFoundationDatabase(adminUrl: string): Promise<void> {
   await bootstrapDatabase(adminUrl);
-  await applyMigrations(migratorDatabaseUrl(adminUrl), { through: "0005_rls_and_grants.sql" });
+  await applyMigrations(migratorDatabaseUrl(adminUrl), { through: "0007_auth_and_identity.sql" });
 }
 
 export async function prepareQueueDatabase(adminUrl: string): Promise<void> {
   await prepareFoundationDatabase(adminUrl);
   const bossMigratorUrl = roleDatabaseUrl(adminUrl, "dce_boss_migrator", "dce_boss_migrator");
-  const grantSql = await readMigration("0006_boss_queue_grants.sql");
+  const grantSql = await readMigration("0008_boss_queue_grants.sql");
 
   const boss = new PgBoss({
     connectionString: bossMigratorUrl,
@@ -96,6 +96,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.agency (id, name) VALUES
         ($1, 'Agency A'),
         ($2, 'Agency B')
+      ON CONFLICT (id) DO NOTHING
     `,
       [fixture.agencyA, fixture.agencyB],
     );
@@ -104,6 +105,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.client (id, agency_id, name) VALUES
         ($1, $3, 'Client A'),
         ($2, $4, 'Client B')
+      ON CONFLICT (id) DO NOTHING
     `,
       [fixture.clientA, fixture.clientB, fixture.agencyA, fixture.agencyB],
     );
@@ -112,6 +114,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.app_user (id, agency_id, display_name) VALUES
         ($1, $3, 'User A'),
         ($2, $4, 'User B')
+      ON CONFLICT (id) DO NOTHING
     `,
       [fixture.userA, fixture.userB, fixture.agencyA, fixture.agencyB],
     );
@@ -120,6 +123,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.client_membership (agency_id, client_id, user_id, role) VALUES
         ($1, $3, $5, 'operator'),
         ($2, $4, $6, 'operator')
+      ON CONFLICT (agency_id, client_id, user_id) DO NOTHING
     `,
       [
         fixture.agencyA,
@@ -135,6 +139,7 @@ export async function seedTwoClientFixture(adminUrl: string): Promise<TestFixtur
       INSERT INTO app.workflow_run (id, agency_id, client_id, state, input_hash, created_by) VALUES
         ($1, $3, $5, 'queued', 'hash-a', $7),
         ($2, $4, $6, 'queued', 'hash-b', $8)
+      ON CONFLICT (id) DO NOTHING
     `,
       [
         fixture.runA,

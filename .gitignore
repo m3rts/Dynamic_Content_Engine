@@ -1,4 +1,7 @@
 node_modules/
+.bin/
+gitleaks
+gitleaks_*.tar.gz
 .next/
 dist/
 coverage/

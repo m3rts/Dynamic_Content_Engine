@@ -7,10 +7,13 @@ export default tseslint.config(
       "**/dist/**",
       "**/node_modules/**",
       "**/.next/**",
+      "apps/web/next.config.ts",
+      "apps/web/next-env.d.ts",
       "**/coverage/**",
       "scripts/**",
       "eslint.config.js",
       "packages/db/src/integration/**",
+      "apps/web/src/integration/**",
       "pnpm-lock.yaml",
     ],
   },
@@ -21,6 +24,15 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         project: ["./tsconfig.eslint.json"],
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    files: ["apps/web/**/*.ts", "apps/web/**/*.tsx"],
+    languageOptions: {
+      parserOptions: {
+        project: ["./apps/web/tsconfig.json"],
         tsconfigRootDir: import.meta.dirname,
       },
     },
