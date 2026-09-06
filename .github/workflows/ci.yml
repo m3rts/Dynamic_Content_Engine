@@ -119,6 +119,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Bootstrap database roles
+        run: psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -f infra/postgres/init/01-roles.sql
+        env:
+          PGPASSWORD: dce_test
+
       - name: Typecheck
         run: pnpm run typecheck
 

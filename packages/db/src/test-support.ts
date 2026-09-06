@@ -33,8 +33,7 @@ export async function bootstrapDatabase(adminUrl: string): Promise<void> {
 
 export async function prepareFoundationDatabase(adminUrl: string): Promise<void> {
   await bootstrapDatabase(adminUrl);
-  const migratorUrl = roleDatabaseUrl(adminUrl, "dce_migrator", "dce_migrator");
-  await applyMigrations(migratorUrl, { through: "0005_rls_and_grants.sql" });
+  await applyMigrations(adminUrl, { through: "0005_rls_and_grants.sql" });
 }
 
 export async function prepareQueueDatabase(adminUrl: string): Promise<void> {
