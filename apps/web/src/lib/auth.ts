@@ -62,6 +62,9 @@ export const auth: AuthInstance = new Proxy({} as AuthInstance, {
       ? (value as (...args: unknown[]) => unknown).bind(instance)
       : value;
   },
+  has(_target, prop) {
+    return prop in getAuth();
+  },
 });
 
 export async function closeAuthPool(): Promise<void> {

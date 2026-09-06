@@ -31,6 +31,7 @@ export function LoginForm({ locale }: LoginFormProps) {
     const response = await fetch("/api/auth/sign-in/email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
